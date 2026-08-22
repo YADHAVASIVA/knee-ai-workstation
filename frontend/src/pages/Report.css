@@ -1,78 +1,92 @@
 .report-workspace {
-  padding: var(--space-48);
-  max-width: 800px;
+  padding: var(--space-64) var(--space-48);
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .report-controls {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--space-32);
 }
 
 .report-document {
-  background-color: #FFF;
+  background-color: #FFFFFF;
   border: 1px solid var(--light-border-strong, #D1D5DB);
+  border-radius: 4px;
   padding: var(--space-64);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .report-header {
   border-bottom: 2px solid var(--light-text);
-  padding-bottom: var(--space-16);
-  margin-bottom: var(--space-32);
+  padding-bottom: var(--space-24);
+  margin-bottom: var(--space-48);
 }
 
 .report-header h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--light-text);
 }
 
 .report-section {
-  margin-bottom: var(--space-32);
+  margin-bottom: var(--space-48);
 }
 
 .report-section h2 {
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--light-text-secondary);
   border-bottom: 1px solid var(--light-border);
   padding-bottom: var(--space-8);
-  margin-bottom: var(--space-16);
+  margin-bottom: var(--space-24);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .report-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-16);
-  font-size: 13px;
+  gap: var(--space-32);
+  font-size: 14px;
 }
 
 .report-grid-3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--space-16);
-  font-size: 13px;
+  gap: var(--space-24);
+  font-size: 14px;
 }
 
 .report-grid-3 h3 {
-  font-size: 13px;
-  margin: 0 0 var(--space-8) 0;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 var(--space-12) 0;
+  color: var(--light-text);
 }
 
 .report-warning {
   margin-top: var(--space-64);
-  border: 2px solid #000;
-  padding: var(--space-16);
+  border: 2px dashed #EF4444;
+  background-color: #FEF2F2;
+  border-radius: 8px;
+  padding: var(--space-24);
   text-align: center;
+  color: #991B1B;
 }
 
 .report-warning strong {
   font-size: 16px;
+  font-weight: 700;
   text-transform: uppercase;
   display: block;
   margin-bottom: var(--space-8);
+  letter-spacing: 0.05em;
 }
 
 @media print {

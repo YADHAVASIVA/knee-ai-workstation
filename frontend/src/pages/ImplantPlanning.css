@@ -1,22 +1,31 @@
 .planning-matches-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-16);
+  gap: var(--space-24);
 }
 
 .planning-match-card {
-  border: 1px solid var(--light-border);
-  padding: var(--space-16);
-  background-color: var(--light-bg);
+  border: 1px solid var(--light-border-strong);
+  border-radius: 8px;
+  padding: var(--space-24);
+  background-color: var(--light-surface);
   display: flex;
-  gap: var(--space-16);
+  gap: var(--space-24);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+}
+
+.planning-match-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .match-rank {
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 18px;
   color: var(--color-primary);
-  width: 60px;
+  width: 40px;
+  padding-top: 4px;
 }
 
 .match-details {
@@ -24,29 +33,32 @@
 }
 
 .match-name {
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: 600;
+  font-size: 16px;
   color: var(--light-text);
+  margin-bottom: var(--space-16);
 }
 
 .match-comparison {
-  background-color: #FFF;
-  padding: var(--space-12);
+  background-color: var(--light-bg);
+  border-radius: 6px;
+  padding: var(--space-16);
   border: 1px solid var(--light-border);
 }
 
 .match-comp-row {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  padding: 2px 0;
+  font-size: 13px;
+  padding: var(--space-4) 0;
 }
 
 .match-comp-row.border-top {
-  border-top: 1px dashed var(--light-border);
-  margin-top: 4px;
-  padding-top: 4px;
-  font-weight: 500;
+  border-top: 1px dashed var(--light-border-strong);
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .match-comp-label {
@@ -54,8 +66,8 @@
 }
 
 .match-score {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: #16A34A;
   text-align: right;
 }
