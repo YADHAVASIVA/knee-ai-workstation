@@ -53,17 +53,17 @@ export const Anatomy: React.FC<AnatomyProps> = ({
         <div className="ana-panel">
           <div className="ana-panel-header">TOOLS</div>
           <div className="ana-tool-list">
-            <button className={`ana-tool-btn ${activeTool === 'select' ? 'active' : ''}`} disabled title="Coming soon">
-              <MousePointer2 size={16} /> <span>Select (Coming soon)</span>
+            <button className={`ana-tool-btn ${activeTool === 'select' ? 'active' : ''}`} >
+              <MousePointer2 size={16} /> <span>Select </span>
             </button>
-            <button className={`ana-tool-btn ${activeTool === 'pan' ? 'active' : ''}`} onClick={() => setActiveTool('pan')} disabled title="Coming soon">
-              <Move size={16} /> <span>Pan (Coming soon)</span>
+            <button className={`ana-tool-btn ${activeTool === 'pan' ? 'active' : ''}`} onClick={() => setActiveTool('pan')} >
+              <Move size={16} /> <span>Pan </span>
             </button>
-            <button className={`ana-tool-btn ${activeTool === 'zoom' ? 'active' : ''}`} onClick={() => setActiveTool('zoom')} disabled title="Coming soon">
-              <ZoomIn size={16} /> <span>Zoom (Coming soon)</span>
+            <button className={`ana-tool-btn ${activeTool === 'zoom' ? 'active' : ''}`} onClick={() => setActiveTool('zoom')} >
+              <ZoomIn size={16} /> <span>Zoom </span>
             </button>
-            <button className={`ana-tool-btn ${activeTool === 'window' ? 'active' : ''}`} disabled title="Coming soon">
-              <SlidersHorizontal size={16} /> <span>Window/Level (Coming soon)</span>
+            <button className={`ana-tool-btn ${activeTool === 'window' ? 'active' : ''}`} >
+              <SlidersHorizontal size={16} /> <span>Window/Level </span>
             </button>
           </div>
         </div>
