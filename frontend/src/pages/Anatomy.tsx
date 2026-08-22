@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MedicalImageViewer } from '../components/MedicalImageViewer';
+import { MousePointer2, Move, ZoomIn, SlidersHorizontal, Eye, EyeOff } from 'lucide-react';
 import './Anatomy.css';
 
 interface AnatomyProps {
@@ -29,25 +30,22 @@ export const Anatomy: React.FC<AnatomyProps> = ({
 
   return (
     <div className="ana-workstation">
-      {/* LEFT SIDEBAR - LAYERS & TOOLS */}
       <div className="ana-sidebar ana-sidebar-left">
         <div className="ana-panel">
           <div className="ana-panel-header">LAYERS</div>
           <div className="ana-layer-list">
-            <label className="ana-layer-item">
-              <input type="checkbox" checked={true} readOnly />
+            <div className="ana-layer-item">
+              <button className="ana-layer-toggle" disabled><Eye size={16} className="text-success" /></button>
               <span>Base Image (MRI)</span>
-            </label>
+            </div>
             {overlays.map(overlay => (
-              <label key={overlay.id} className="ana-layer-item">
-                <input 
-                  type="checkbox" 
-                  checked={overlay.visible}
-                  onChange={() => onToggleOverlay(overlay.id)}
-                />
+              <div key={overlay.id} className="ana-layer-item" onClick={() => onToggleOverlay(overlay.id)}>
+                <button className="ana-layer-toggle">
+                  {overlay.visible ? <Eye size={16} className="text-success" /> : <EyeOff size={16} className="text-muted" />}
+                </button>
                 <span style={{ color: overlay.color }}>{overlay.name}</span>
                 <span className="ana-layer-status">Detected</span>
-              </label>
+              </div>
             ))}
           </div>
         </div>
@@ -55,15 +53,22 @@ export const Anatomy: React.FC<AnatomyProps> = ({
         <div className="ana-panel">
           <div className="ana-panel-header">TOOLS</div>
           <div className="ana-tool-list">
-            <button className={`ana-tool-btn ${activeTool === 'select' ? 'active' : ''}`} disabled title="Coming soon">Select (Coming soon)</button>
-            <button className={`ana-tool-btn ${activeTool === 'pan' ? 'active' : ''}`} onClick={() => setActiveTool('pan')} disabled title="Coming soon">Pan (Coming soon)</button>
-            <button className={`ana-tool-btn ${activeTool === 'zoom' ? 'active' : ''}`} onClick={() => setActiveTool('zoom')} disabled title="Coming soon">Zoom (Coming soon)</button>
-            <button className={`ana-tool-btn ${activeTool === 'window' ? 'active' : ''}`} disabled title="Coming soon">Window/Level (Coming soon)</button>
+            <button className={`ana-tool-btn ${activeTool === 'select' ? 'active' : ''}`} disabled title="Coming soon">
+              <MousePointer2 size={16} /> <span>Select (Coming soon)</span>
+            </button>
+            <button className={`ana-tool-btn ${activeTool === 'pan' ? 'active' : ''}`} onClick={() => setActiveTool('pan')} disabled title="Coming soon">
+              <Move size={16} /> <span>Pan (Coming soon)</span>
+            </button>
+            <button className={`ana-tool-btn ${activeTool === 'zoom' ? 'active' : ''}`} onClick={() => setActiveTool('zoom')} disabled title="Coming soon">
+              <ZoomIn size={16} /> <span>Zoom (Coming soon)</span>
+            </button>
+            <button className={`ana-tool-btn ${activeTool === 'window' ? 'active' : ''}`} disabled title="Coming soon">
+              <SlidersHorizontal size={16} /> <span>Window/Level (Coming soon)</span>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* CENTER VIEWER */}
       <div className="ana-viewer-container">
         {previewUrl ? (
           <MedicalImageViewer
@@ -79,7 +84,6 @@ export const Anatomy: React.FC<AnatomyProps> = ({
         )}
       </div>
 
-      {/* RIGHT SIDEBAR - FINDINGS */}
       <div className="ana-sidebar ana-sidebar-right">
         <div className="ana-panel">
           <div className="ana-panel-header">FINDINGS</div>
@@ -100,22 +104,18 @@ export const Anatomy: React.FC<AnatomyProps> = ({
           <div className="ana-panel-header">MEASUREMENTS</div>
           
           <div className="ana-measure-controls">
-            <label className="ana-layer-item">
-              <input 
-                type="checkbox" 
-                checked={showMeasurements}
-                onChange={(e) => onToggleMeasurements(e.target.checked)}
-              />
+            <div className="ana-layer-item" onClick={() => onToggleMeasurements(!showMeasurements)}>
+              <button className="ana-layer-toggle">
+                {showMeasurements ? <Eye size={16} className="text-success" /> : <EyeOff size={16} className="text-muted" />}
+              </button>
               <span>Meniscus</span>
-            </label>
-            <label className="ana-layer-item">
-              <input 
-                type="checkbox" 
-                checked={showBoneMeasurements}
-                onChange={(e) => onToggleBoneMeasurements(e.target.checked)}
-              />
+            </div>
+            <div className="ana-layer-item" onClick={() => onToggleBoneMeasurements(!showBoneMeasurements)}>
+              <button className="ana-layer-toggle">
+                {showBoneMeasurements ? <Eye size={16} className="text-success" /> : <EyeOff size={16} className="text-muted" />}
+              </button>
               <span>Bones</span>
-            </label>
+            </div>
           </div>
 
           <div className="ana-measure-summary">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronRight, Settings, User } from 'lucide-react';
 import './shell.css';
 
 interface TopBarProps {
@@ -31,14 +32,14 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header className="app-topbar">
       <div className="topbar-left">
         <span className="topbar-brand">KNEE AI</span>
-        <span className="breadcrumb-slash">/</span>
+        <ChevronRight size={16} className="breadcrumb-slash" />
         <span className="topbar-route">{getContextName()}</span>
       </div>
       
       <div className="topbar-right">
         {analysisId && (
           <>
-            <span className="topbar-meta">{analysisId.split('-')[0].toUpperCase()}</span>
+            <span className="topbar-meta mono">{analysisId.split('-')[0].toUpperCase()}</span>
             <span className="topbar-divider"></span>
             <span className="topbar-meta">{imageMetadata?.modality || 'MRI'}</span>
             <span className="topbar-divider"></span>
@@ -50,9 +51,12 @@ export const TopBar: React.FC<TopBarProps> = ({
         {isDemo && (
           <>
             <span className="topbar-divider"></span>
-            <span className="topbar-demo-badge">DEMO</span>
+            <span className="topbar-demo-badge">RESEARCH PROTOTYPE</span>
           </>
         )}
+        <span className="topbar-divider"></span>
+        <button className="topbar-icon-btn"><Settings size={18} /></button>
+        <button className="topbar-icon-btn"><User size={18} /></button>
       </div>
     </header>
   );

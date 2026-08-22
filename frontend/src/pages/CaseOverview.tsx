@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { WorkflowState } from '../hooks/useAnalysisWorkflow';
 import { Button } from '../components/ui/Button';
+import { UploadCloud, CheckCircle2, Circle, Loader2 } from 'lucide-react';
 import './CaseOverview.css';
 
 interface CaseOverviewProps {
@@ -38,10 +39,10 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({
     const isMatchDone = workflowState === WorkflowState.MATCHING_COMPLETE;
 
     return [
-      { id: 'image', label: 'Imaging', state: isIdle ? 'Waiting' : 'Complete', active: !isIdle },
-      { id: 'anatomy', label: 'Anatomy', state: isSegDone || isOADone ? 'Complete' : (isReady ? 'Running' : 'Waiting'), active: isSegDone },
-      { id: 'analysis', label: 'Analysis', state: isOADone ? 'Complete' : (isSegDone ? 'Ready' : 'Waiting'), active: isOADone },
-      { id: 'planning', label: 'Planning', state: isMatchDone ? 'Complete' : (isOADone ? 'Ready' : 'Waiting'), active: isMatchDone }
+      { id: 'image', label: 'Imaging', state: isIdle ? 'Waiting' : 'Complete', active: !isIdle, icon: isIdle ? <Circle size={16}/> : <CheckCircle2 size={16} className="text-success"/> },
+      { id: 'anatomy', label: 'Anatomy', state: isSegDone || isOADone ? 'Complete' : (isReady ? 'Running' : 'Waiting'), active: isSegDone, icon: (isSegDone || isOADone) ? <CheckCircle2 size={16} className="text-success"/> : (isReady ? <Loader2 size={16} className="animate-spin text-primary"/> : <Circle size={16}/>) },
+      { id: 'analysis', label: 'Analysis', state: isOADone ? 'Complete' : (isSegDone ? 'Ready' : 'Waiting'), active: isOADone, icon: isOADone ? <CheckCircle2 size={16} className="text-success"/> : (isSegDone ? <Circle size={16} className="text-primary"/> : <Circle size={16}/>) },
+      { id: 'planning', label: 'Planning', state: isMatchDone ? 'Complete' : (isOADone ? 'Ready' : 'Waiting'), active: isMatchDone, icon: isMatchDone ? <CheckCircle2 size={16} className="text-success"/> : (isOADone ? <Circle size={16} className="text-primary"/> : <Circle size={16}/>) }
     ];
   };
 
@@ -56,6 +57,7 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({
             <p className="co-subtitle">Start a new imaging analysis</p>
           </div>
           <div className="co-dropzone" onClick={() => fileInputRef.current?.click()}>
+            <UploadCloud size={48} className="co-drop-icon" />
             <div className="co-drop-title">Upload a knee MRI study to begin.</div>
             <div className="co-drop-subtitle">Drop DICOM / image here or Browse files</div>
             <div className="co-drop-meta">Supported: DICOM &bull; PNG &bull; JPG &bull; JPEG</div>
@@ -117,9 +119,9 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({
               <div className="co-panel mt-6">
                 <h3 className="co-panel-title">Analysis Pipeline</h3>
                 <div className="co-pipeline-list">
-                  {pipeline.map((step, idx) => (
+                  {pipeline.map((step) => (
                     <div key={step.id} className={`co-pipe-item ${step.active ? 'active' : ''}`}>
-                      <div className="co-pipe-num">{String(idx + 1).padStart(2, '0')}</div>
+                      <div className="co-pipe-icon">{step.icon}</div>
                       <div className="co-pipe-name">{step.label}</div>
                       <div className={`co-pipe-state ${step.state.toLowerCase().replace(' ', '-')}`}>
                         {step.state}

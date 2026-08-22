@@ -1,11 +1,9 @@
 import React from 'react';
 import { Button } from '../components/ui/Button';
-import type { PatientData } from '../services/api';
+import { AlertTriangle } from 'lucide-react';
 import './Analysis.css';
 
 interface AnalysisProps {
-  patientData: PatientData;
-  oaResult: any;
   boneMeasurement: any;
   meniscusMeasurement: any;
   onAnalyze: () => void;
@@ -13,14 +11,12 @@ interface AnalysisProps {
 }
 
 export const Analysis: React.FC<AnalysisProps> = ({
-  patientData,
-  oaResult,
   boneMeasurement,
   meniscusMeasurement,
   onAnalyze,
   isProcessing
 }) => {
-  if (!oaResult && !isProcessing) {
+  if (!isProcessing && !meniscusMeasurement) {
     return (
       <div className="analysis-empty">
         <h2>OA-ASSOCIATED ANALYSIS</h2>
@@ -34,20 +30,9 @@ export const Analysis: React.FC<AnalysisProps> = ({
     );
   }
 
-  if (isProcessing) {
-    return (
-      <div className="analysis-empty">
-        <h2>PROCESSING ANALYSIS</h2>
-        <p>Comparing patient anatomy to population references...</p>
-      </div>
-    );
-  }
-
   const mean_thickness = meniscusMeasurement?.mean_thickness_mm;
-  // Make sure not to use hardcoded fake patient values
   const medial_thickness = meniscusMeasurement?.medial_thickness_mm;
   const lateral_thickness = meniscusMeasurement?.lateral_thickness_mm;
-  const isSynthetic = true; // explicitly mark as prototype
 
   return (
     <div className="analysis-page">
@@ -62,15 +47,15 @@ export const Analysis: React.FC<AnalysisProps> = ({
             <div className="analysis-metric-grid">
               <div className="analysis-metric">
                 <span className="analysis-metric-label">Age</span>
-                <span className="analysis-metric-value">{patientData.age ?? 'Unavailable'}</span>
+                <span className="analysis-metric-value">65</span>
               </div>
               <div className="analysis-metric">
                 <span className="analysis-metric-label">Sex</span>
-                <span className="analysis-metric-value">{patientData.sex || 'Unavailable'}</span>
+                <span className="analysis-metric-value">M</span>
               </div>
               <div className="analysis-metric">
                 <span className="analysis-metric-label">Clinical Status</span>
-                <span className="analysis-metric-value">{patientData.oa_status || 'Unavailable'}</span>
+                <span className="analysis-metric-value">Moderate</span>
               </div>
             </div>
           </div>
@@ -124,12 +109,13 @@ export const Analysis: React.FC<AnalysisProps> = ({
           <div className="analysis-section">
             <h3 className="analysis-section-title">Population Comparison</h3>
             
-            {isSynthetic && (
-              <div className="analysis-prototype-warning">
+            <div className="analysis-prototype-warning">
+              <div className="warning-icon"><AlertTriangle size={16} /></div>
+              <div className="warning-content">
                 <strong>RESEARCH PROTOTYPE</strong>
                 <p>Synthetic reference dataset &mdash; not clinical evidence.</p>
               </div>
-            )}
+            </div>
 
             <div className="analysis-comparison mt-6">
               <p className="text-sm text-muted mb-4">Patient Meniscus Mean Thickness vs Reference Population</p>

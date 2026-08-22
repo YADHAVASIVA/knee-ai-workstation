@@ -1,3 +1,10 @@
+﻿import os
+
+def write_file(path, content):
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content.strip() + '\n')
+
+write_file('frontend/src/components/shell/Sidebar.tsx', """
 import React from 'react';
 import { Activity, ShieldCheck, AlertCircle } from 'lucide-react';
 import './shell.css';
@@ -64,7 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="case-context-title">CURRENT CASE</div>
           <div className="case-context-id">{analysisId.split('-')[0].toUpperCase()}</div>
           <div className="case-context-meta">
-            {imageMetadata?.modality || 'MRI'} &bull; {imageMetadata?.dimensions ? `${imageMetadata.dimensions.width} × ${imageMetadata.dimensions.height}` : 'Unavailable'}
+            {imageMetadata?.modality || 'MRI'} &bull; {imageMetadata?.dimensions ? `${imageMetadata.dimensions.width} x ${imageMetadata.dimensions.height}` : 'Unavailable'}
           </div>
           <div className={`case-context-status ${isCalibrated ? 'success' : 'warning'}`}>
             {isCalibrated ? <ShieldCheck size={14} /> : <AlertCircle size={14} />}
@@ -75,3 +82,4 @@ export const Sidebar: React.FC<SidebarProps> = ({
     </aside>
   );
 };
+""")

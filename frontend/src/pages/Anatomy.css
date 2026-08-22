@@ -44,11 +44,31 @@
 .ana-layer-item {
   display: flex;
   align-items: center;
-  gap: var(--space-8);
+  gap: var(--space-12);
   font-size: 13px;
   color: var(--dark-text);
   cursor: pointer;
+  padding: var(--space-4) 0;
+  transition: opacity 0.2s;
 }
+
+.ana-layer-item:hover {
+  opacity: 0.8;
+}
+
+.ana-layer-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.text-success { color: #10B981; }
+.text-muted { color: var(--dark-text-secondary); }
+.text-primary { color: var(--color-primary); }
 
 .ana-layer-status {
   margin-left: auto;
@@ -67,10 +87,15 @@
   background: transparent;
   border: 1px solid var(--dark-border);
   color: var(--dark-text);
-  padding: var(--space-8);
+  padding: var(--space-8) var(--space-12);
   font-size: 12px;
   text-align: left;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
 }
 
 .ana-tool-btn:hover:not(:disabled) {
@@ -114,9 +139,10 @@
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  padding: var(--space-8);
+  padding: var(--space-8) var(--space-12);
   background-color: rgba(255,255,255,0.02);
   border: 1px solid var(--dark-border);
+  border-radius: var(--radius-sm);
 }
 
 .ana-finding-status {
@@ -129,7 +155,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  padding: var(--space-4) 0;
+  padding: var(--space-6) 0;
   border-bottom: 1px dashed var(--dark-border);
 }
 

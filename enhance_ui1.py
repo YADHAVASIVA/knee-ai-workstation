@@ -1,3 +1,10 @@
+﻿import os
+
+def write_file(path, content):
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content.strip() + '\n')
+
+write_file('frontend/src/App.tsx', '''
 import { useEffect, useState } from 'react';
 import * as api from './services/api';
 import { getSystemInfo, uploadImage, preprocessImage, getPreviewUrl, analyzeAnatomy, getMaskUrl, measureMeniscus, analyzeOA, measureBoneAnatomy, matchImplants } from './services/api';
@@ -40,7 +47,7 @@ function App() {
     setUploadData, setPreprocessData,
     segmentationResult, setSegmentationResult, meniscusMeasurement, setMeniscusMeasurement,
     boneMeasurement, setBoneMeasurement, oaResult, setOaResult,
-    matchingResult, setMatchingResult, resetAnalysis
+    matchingResult, setMatchingResult, patientData, resetAnalysis
   } = workflow;
 
   const [activeRoute, setActiveRoute] = useState<AppRoute>('overview');
@@ -71,18 +78,17 @@ function App() {
   const handleFileUpload = async (file: File) => {
     try {
       setErrorMsg(null);
-      setWorkflowState(WorkflowState.IMAGE_UPLOADED); // Used to be UPLOADING, but enum doesn't have it
+      setWorkflowState(WorkflowState.UPLOADING);
       
       const uploadRes = await uploadImage(file);
       setUploadData(uploadRes);
       
       setWorkflowState(WorkflowState.PREPROCESSING);
-      const preRes = await preprocessImage(uploadRes.image_id);
+      const preRes = await preprocessImage(uploadRes.analysis_id);
       setPreprocessData(preRes);
-      const meta = await api.getImageMetadata(uploadRes.image_id);
-      setImageMetadata(meta);
+      setImageMetadata(preRes.metadata);
       
-      const pUrl = getPreviewUrl(uploadRes.image_id);
+      const pUrl = getPreviewUrl(uploadRes.analysis_id);
       setPreviewUrl(pUrl);
       
       setWorkflowState(WorkflowState.READY_FOR_SEGMENTATION);
@@ -130,7 +136,7 @@ function App() {
     if (!analysisId) return;
     try {
       setWorkflowState(WorkflowState.OA_ANALYSIS_COMPLETE);
-      const oa = await analyzeOA(analysisId, { age: 65, sex: 'M', oa_status: 'Moderate' });
+      const oa = await analyzeOA(analysisId);
       setOaResult(oa);
     } catch (err: any) {
       console.error(err);
@@ -192,6 +198,8 @@ function App() {
       case 'analysis':
         return (
           <Analysis 
+            patientData={patientData}
+            oaResult={oaResult}
             boneMeasurement={boneMeasurement}
             meniscusMeasurement={meniscusMeasurement}
             onAnalyze={handleRunOAAnalysis}
@@ -241,3 +249,151 @@ function App() {
 }
 
 export default App;
+''')
+
+write_file('frontend/src/components/shell/Sidebar.tsx', '''
+import React from 'react';
+import { Activity, ShieldCheck, AlertCircle } from 'lucide-react';
+import './shell.css';
+
+interface SidebarProps {
+  activeRoute: string;
+  onNavigate: (route: string) => void;
+  analysisId: string | null;
+  routes: Array<{ id: string; label: string; category: string; disabled?: boolean; icon?: React.ReactNode }>;
+  imageMetadata?: any;
+  isCalibrated?: boolean | null;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ 
+  activeRoute, 
+  onNavigate, 
+  analysisId,
+  routes,
+  imageMetadata,
+  isCalibrated
+}) => {
+  const sections = routes.reduce((acc, route) => {
+    if (!acc[route.category]) acc[route.category] = [];
+    acc[route.category].push(route);
+    return acc;
+  }, {} as Record<string, typeof routes>);
+
+  return (
+    <aside className="app-sidebar">
+      <div className="sidebar-brand">
+        <div className="brand-logo">
+          <Activity size={24} color="var(--color-primary)" />
+          <div className="brand-text">
+            <div className="brand-title">KNEE AI</div>
+            <div className="brand-subtitle">Clinical Workstation</div>
+          </div>
+        </div>
+      </div>
+
+      <nav className="sidebar-nav">
+        {Object.entries(sections).map(([category, items]) => (
+          <div key={category} className="nav-section">
+            <h3 className="nav-section-title">{category}</h3>
+            <ul className="nav-list">
+              {items.map(item => (
+                <li key={item.id}>
+                  <button
+                    className={
+av-btn }
+                    onClick={() => onNavigate(item.id)}
+                    disabled={item.disabled}
+                  >
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-label">{item.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
+
+      {analysisId && (
+        <div className="sidebar-case-context">
+          <div className="case-context-title">CURRENT CASE</div>
+          <div className="case-context-id">{analysisId.split('-')[0].toUpperCase()}</div>
+          <div className="case-context-meta">
+            {imageMetadata?.modality || 'MRI'} &bull; {imageMetadata?.dimensions ? ${imageMetadata.dimensions.width} ×  : 'Unavailable'}
+          </div>
+          <div className={case-context-status }>
+            {isCalibrated ? <ShieldCheck size={14} /> : <AlertCircle size={14} />}
+            <span>{isCalibrated ? 'Calibrated' : 'Uncalibrated'}</span>
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+};
+''')
+
+write_file('frontend/src/components/shell/TopBar.tsx', '''
+import React from 'react';
+import { ChevronRight, Settings, User } from 'lucide-react';
+import './shell.css';
+
+interface TopBarProps {
+  activeRoute: string;
+  analysisId: string | null;
+  isDemo: boolean;
+  isCalibrated: boolean | null;
+  imageMetadata?: any;
+}
+
+export const TopBar: React.FC<TopBarProps> = ({ 
+  activeRoute, 
+  analysisId,
+  isDemo,
+  isCalibrated,
+  imageMetadata
+}) => {
+  const getContextName = () => {
+    switch(activeRoute) {
+      case 'overview': return 'Overview';
+      case 'anatomy': return 'Anatomy';
+      case 'analysis': return 'OA Analysis';
+      case 'planning': return 'Implant Planning';
+      case 'report': return 'Report';
+      default: return '';
+    }
+  };
+
+  return (
+    <header className="app-topbar">
+      <div className="topbar-left">
+        <span className="topbar-brand">KNEE AI</span>
+        <ChevronRight size={16} className="breadcrumb-slash" />
+        <span className="topbar-route">{getContextName()}</span>
+      </div>
+      
+      <div className="topbar-right">
+        {analysisId && (
+          <>
+            <span className="topbar-meta mono">{analysisId.split('-')[0].toUpperCase()}</span>
+            <span className="topbar-divider"></span>
+            <span className="topbar-meta">{imageMetadata?.modality || 'MRI'}</span>
+            <span className="topbar-divider"></span>
+            <span className={	opbar-meta }>
+              &bull; {isCalibrated ? 'Calibrated' : 'Uncalibrated'}
+            </span>
+          </>
+        )}
+        {isDemo && (
+          <>
+            <span className="topbar-divider"></span>
+            <span className="topbar-demo-badge">RESEARCH PROTOTYPE</span>
+          </>
+        )}
+        <span className="topbar-divider"></span>
+        <button className="topbar-icon-btn"><Settings size={18} /></button>
+        <button className="topbar-icon-btn"><User size={18} /></button>
+      </div>
+    </header>
+  );
+};
+''')
