@@ -1,246 +1,181 @@
-import { useEffect, useState } from 'react';
-import * as api from './services/api';
-import { getSystemInfo, uploadImage, preprocessImage, getPreviewUrl, analyzeAnatomy, getMaskUrl, measureMeniscus, analyzeOA, measureBoneAnatomy, matchImplants } from './services/api';
-import { useAnalysisWorkflow, WorkflowState } from './hooks/useAnalysisWorkflow';
-import { LayoutDashboard, Layers, Activity, Crosshair, FileText } from 'lucide-react';
-import './App.css';
-
-import { AppShell } from './components/shell/AppShell';
-
+﻿import { useState } from 'react';
+import { Sidebar } from './components/shell/Sidebar';
+import { TopBar } from './components/shell/TopBar';
 import { CaseOverview } from './pages/CaseOverview';
+import { ImagingStudies } from './pages/ImagingStudies';
 import { Anatomy } from './pages/Anatomy';
 import { Analysis } from './pages/Analysis';
 import { ImplantPlanning } from './pages/ImplantPlanning';
 import { Report } from './pages/Report';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import type { CaseState } from './types/case';
+import * as api from './services/api';
 
-export type AppRoute = 'overview' | 'anatomy' | 'analysis' | 'planning' | 'report';
+export type AppRoute = 'overview' | 'imaging' | 'anatomy' | 'analysis' | 'planning' | 'report';
 
 function App() {
-  const [imageMetadata, setImageMetadata] = useState<api.ImageMetadata | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [overlays, setOverlays] = useState<any[]>([]);
-  const [showMeniscusLines, setShowMeniscusLines] = useState<boolean>(true);
-  const [showBoneLines, setShowBoneLines] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchSystemStatus = async () => {
-      try {
-        await getSystemInfo();
-      } catch (err) {
-        console.error('Failed to connect to backend', err);
-      }
-    };
-    fetchSystemStatus();
-  }, []);
-
-  const workflow = useAnalysisWorkflow();
-  const { 
-    analysisId, setAnalysisId, workflowState, setWorkflowState, setErrorMsg, 
-    setUploadData, setPreprocessData,
-    segmentationResult, setSegmentationResult, meniscusMeasurement, setMeniscusMeasurement,
-    boneMeasurement, setBoneMeasurement, oaResult, setOaResult,
-    matchingResult, setMatchingResult, resetAnalysis
-  } = workflow;
-
   const [activeRoute, setActiveRoute] = useState<AppRoute>('overview');
+  
+  const [caseState, setCaseState] = useState<CaseState>({
+    caseId: `KAI-2026-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+    patient: {
+      name: '',
+      age: '',
+      sex: '',
+      patientId: '',
+      laterality: '',
+      notes: ''
+    },
+    images: [],
+    activeImageId: null,
+    oaAnalysis: null,
+    implantMatches: null
+  });
+
+  const handleProcessImage = async (imageId: string) => {
+    try {
+      setCaseState(prev => ({
+        ...prev,
+        images: prev.images.map(img => img.id === imageId ? { ...img, status: 'PROCESSING' } : img)
+      }));
+
+      const seg = await api.analyzeAnatomy(imageId);
+      
+      let meniscus = null;
+      let bones = null;
+      
+      try {
+        bones = await api.measureBoneAnatomy(imageId);
+      } catch (e) { console.error(e) }
+
+      const img = caseState.images.find(i => i.id === imageId);
+      if (img?.metadata?.modality === 'MRI') {
+        try {
+          meniscus = await api.measureMeniscus(imageId);
+        } catch (e) { console.error(e) }
+      }
+
+      setCaseState(prev => ({
+        ...prev,
+        images: prev.images.map(img => img.id === imageId ? { 
+          ...img, 
+          status: 'COMPLETED',
+          segmentation: seg,
+          measurements: { meniscus, bones }
+        } : img)
+      }));
+    } catch (err) {
+      console.error(err);
+      setCaseState(prev => ({
+        ...prev,
+        images: prev.images.map(img => img.id === imageId ? { ...img, status: 'FAILED' } : img)
+      }));
+    }
+  };
 
   const navItems = [
-    { id: 'overview' as AppRoute, label: 'Overview', category: 'CASE', icon: <LayoutDashboard size={18} /> },
-    { id: 'anatomy' as AppRoute, label: 'Anatomy', category: 'ANATOMY', disabled: workflowState === WorkflowState.IDLE, icon: <Layers size={18} /> },
-    { id: 'analysis' as AppRoute, label: 'OA Analysis', category: 'ANALYSIS', disabled: !segmentationResult, icon: <Activity size={18} /> },
-    { id: 'planning' as AppRoute, label: 'Implant Planning', category: 'PLANNING', disabled: !boneMeasurement, icon: <Crosshair size={18} /> },
-    { id: 'report' as AppRoute, label: 'Report', category: 'OUTPUT', disabled: !matchingResult, icon: <FileText size={18} /> }
+    { id: 'overview', label: 'Overview', icon: 'FileText', category: 'main' },
+    { id: 'imaging', label: 'Imaging', icon: 'Image', category: 'main' },
+    { id: 'anatomy', label: 'Anatomy', icon: 'Layers', category: 'main' },
+    { id: 'analysis', label: 'Analysis', icon: 'Activity', category: 'main' },
+    { id: 'planning', label: 'Planning', icon: 'Crosshair', category: 'main' },
+    { id: 'report', label: 'Report', icon: 'FileOutput', category: 'main' }
   ];
 
-  const handleNavigate = (route: AppRoute) => {
-    const targetItem = navItems.find(item => item.id === route);
-    if (targetItem && !targetItem.disabled) {
-      setActiveRoute(route);
-    }
-  };
-
-  const handleResetAnalysis = () => {
-    resetAnalysis();
-    setPreviewUrl(null);
-    setOverlays([]);
-    setImageMetadata(null);
-    setActiveRoute('overview');
-  };
-
-  const handleFileUpload = async (file: File) => {
-    try {
-      setErrorMsg(null);
-      setWorkflowState(WorkflowState.IMAGE_UPLOADED); // Used to be UPLOADING, but enum doesn't have it
-      
-      const uploadRes = await uploadImage(file);
-      setUploadData(uploadRes);
-      setAnalysisId(uploadRes.image_id);
-      
-      setWorkflowState(WorkflowState.PREPROCESSING);
-      const preRes = await preprocessImage(uploadRes.image_id);
-      setPreprocessData(preRes);
-      const meta = await api.getImageMetadata(uploadRes.image_id);
-      setImageMetadata(meta);
-      
-      const pUrl = getPreviewUrl(uploadRes.image_id);
-      setPreviewUrl(pUrl);
-      
-      setWorkflowState(WorkflowState.READY_FOR_SEGMENTATION);
+  const handleNewCase = () => {
+    if(window.confirm('Start a new case? All unsaved progress will be lost.')) {
+      setCaseState({
+        caseId: `KAI-2026-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        patient: { name: '', age: '', sex: '', patientId: '', laterality: '', notes: '' },
+        images: [],
+        activeImageId: null,
+        oaAnalysis: null,
+        implantMatches: null
+      });
       setActiveRoute('overview');
-    } catch (err: any) {
-      console.error(err);
-      setErrorMsg(err.message || 'Analysis could not be completed.');
-      setWorkflowState(WorkflowState.ERROR);
     }
   };
-
-  const handleRunAnatomyAnalysis = async () => {
-    if (!analysisId) return;
-    try {
-      setWorkflowState(WorkflowState.SEGMENTING);
-      const segRes = await analyzeAnatomy(analysisId);
-      setSegmentationResult(segRes);
-
-      const newOverlays = [
-        { id: 'femur', name: 'Femur', visible: true, color: '#3b82f6', url: getMaskUrl(analysisId, 'femur') },
-        { id: 'tibia', name: 'Tibia', visible: true, color: '#10b981', url: getMaskUrl(analysisId, 'tibia') },
-        { id: 'meniscus', name: 'Meniscus', visible: true, color: '#f59e0b', url: getMaskUrl(analysisId, 'medial_meniscus') }
-      ];
-      setOverlays(newOverlays);
-
-      setWorkflowState(WorkflowState.SEGMENTATION_COMPLETE);
-
-      setWorkflowState(WorkflowState.MEASURING_MENISCUS);
-      const menisRes = await measureMeniscus(analysisId);
-      setMeniscusMeasurement(menisRes);
-
-      setWorkflowState(WorkflowState.MEASURING_BONES);
-      const boneRes = await measureBoneAnatomy(analysisId);
-      setBoneMeasurement(boneRes);
-
-      setWorkflowState(WorkflowState.BONE_MEASUREMENTS_COMPLETE);
-    } catch (err: any) {
-      console.error(err);
-      setErrorMsg(err.message || 'Analysis could not be completed.');
-      setWorkflowState(WorkflowState.ERROR);
-    }
-  };
-
-  const handleRunOAAnalysis = async () => {
-    if (!analysisId) return;
-    try {
-      setWorkflowState(WorkflowState.OA_ANALYSIS_COMPLETE);
-      const oa = await analyzeOA(analysisId, { age: 65, sex: 'M', oa_status: 'Moderate' });
-      setOaResult(oa);
-    } catch (err: any) {
-      console.error(err);
-      setErrorMsg('Analysis could not be completed.');
-    }
-  };
-
-  const handleRunImplantMatching = async () => {
-    if (!analysisId) return;
-    try {
-      setWorkflowState(WorkflowState.MATCHING);
-      const match = await matchImplants(analysisId);
-      setMatchingResult(match);
-      setWorkflowState(WorkflowState.MATCHING_COMPLETE);
-    } catch (err: any) {
-      console.error(err);
-      setErrorMsg('Analysis could not be completed.');
-    }
-  };
-
-  const toggleOverlay = (id: string) => {
-    setOverlays(prev => prev.map(o => o.id === id ? { ...o, visible: !o.visible } : o));
-  };
-
-  useEffect(() => {
-    if (workflowState === WorkflowState.READY_FOR_SEGMENTATION) {
-      handleRunAnatomyAnalysis();
-    }
-  }, [workflowState]);
 
   const renderPage = () => {
     switch (activeRoute) {
       case 'overview':
         return (
           <CaseOverview 
-            workflowState={workflowState}
-            analysisId={analysisId}
-            imageMetadata={imageMetadata}
-            previewUrl={previewUrl}
-            onNavigate={handleNavigate as any}
-            onUpload={handleFileUpload}
-            onReset={handleResetAnalysis}
+            patient={caseState.patient}
+            onChange={(p) => setCaseState(prev => ({ ...prev, patient: p }))}
+            onNext={() => setActiveRoute('imaging')}
+          />
+        );
+      case 'imaging':
+        return (
+          <ImagingStudies 
+            images={caseState.images}
+            setImages={(action) => {
+              if (typeof action === 'function') {
+                setCaseState(prev => {
+                  const newImages = action(prev.images);
+                  return { ...prev, images: newImages, activeImageId: newImages.length > 0 ? newImages[0].id : null };
+                });
+              }
+            }}
+            onBack={() => setActiveRoute('overview')}
+            onNext={() => setActiveRoute('anatomy')}
           />
         );
       case 'anatomy':
         return (
           <Anatomy 
-            previewUrl={previewUrl}
-            overlays={overlays}
-            measurements={meniscusMeasurement ? meniscusMeasurement.locations : []}
-            boneMeasurement={boneMeasurement}
-            onToggleOverlay={toggleOverlay}
-            showMeasurements={showMeniscusLines}
-            onToggleMeasurements={setShowMeniscusLines}
-            showBoneMeasurements={showBoneLines}
-            onToggleBoneMeasurements={setShowBoneLines}
-            modality={imageMetadata?.modality || 'UNKNOWN'}
+            images={caseState.images}
+            activeImageId={caseState.activeImageId}
+            setActiveImageId={(id) => setCaseState(prev => ({ ...prev, activeImageId: id }))}
+            onProcessImage={handleProcessImage}
+            onBack={() => setActiveRoute('imaging')}
+            onNext={() => setActiveRoute('analysis')}
           />
         );
       case 'analysis':
         return (
           <Analysis 
-            boneMeasurement={boneMeasurement}
-            meniscusMeasurement={meniscusMeasurement}
-            onAnalyze={handleRunOAAnalysis}
-            isProcessing={workflowState === WorkflowState.OA_ANALYSIS_COMPLETE && !oaResult}
-            modality={imageMetadata?.modality || 'UNKNOWN'}
+            caseState={caseState}
+            setCaseState={setCaseState}
+            onBack={() => setActiveRoute('anatomy')}
+            onNext={() => setActiveRoute('planning')}
           />
         );
       case 'planning':
         return (
           <ImplantPlanning 
-            matchingResult={matchingResult}
-            boneMeasurement={boneMeasurement}
-            onMatch={handleRunImplantMatching}
-            isProcessing={workflowState === WorkflowState.MATCHING}
+            caseState={caseState}
+            setCaseState={setCaseState}
+            onBack={() => setActiveRoute('analysis')}
+            onNext={() => setActiveRoute('report')}
           />
         );
       case 'report':
         return (
           <Report 
-            onNavigate={handleNavigate as any}
-            analysisId={analysisId}
-            imageMetadata={imageMetadata}
-            boneMeasurement={boneMeasurement}
-            meniscusMeasurement={meniscusMeasurement}
-            matchingResult={matchingResult}
-            modality={imageMetadata?.modality || 'UNKNOWN'}
+            caseState={caseState}
+            onBack={() => setActiveRoute('planning')}
+            onNewCase={handleNewCase}
           />
         );
       default:
-        return <div>404 Not Found</div>;
+        return <div>Page not found</div>;
     }
   };
 
   return (
-    <ErrorBoundary>
-      <AppShell
-        activeRoute={activeRoute}
-        onNavigate={handleNavigate as any}
-        analysisId={analysisId}
-        isDemo={true}
-        isCalibrated={imageMetadata?.pixel_spacing ? true : false}
-        imageMetadata={imageMetadata}
-        routes={navItems}
-      >
-        {renderPage()}
-      </AppShell>
-    </ErrorBoundary>
+    <div className={`app-shell theme-${activeRoute === 'anatomy' ? 'dark' : 'light'}`}>
+      <Sidebar activeRoute={activeRoute} analysisId={caseState.caseId} onNavigate={(route) => setActiveRoute(route as AppRoute)} routes={navItems as any} />
+      <div className="main-content">
+        <TopBar activeRoute={activeRoute} analysisId={caseState.caseId} isDemo={true} isCalibrated={caseState.images.some(img => img.metadata?.pixel_spacing)} />
+        <main className="page-container">
+          <ErrorBoundary>
+            {renderPage()}
+          </ErrorBoundary>
+        </main>
+      </div>
+    </div>
   );
 }
 

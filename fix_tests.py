@@ -1,38 +1,41 @@
 ﻿import os
-import re
 
-def fix_file(filepath, replacements):
-    if not os.path.exists(filepath): return
-    with open(filepath, 'r', encoding='utf-8') as f:
-        content = f.read()
-    for old, new in replacements:
-        if isinstance(old, re.Pattern):
-            content = old.sub(new, content)
-        else:
-            content = content.replace(old, new)
+def fix_file(filepath, content):
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
 
-fix_file('backend/tests/test_measurements.py', [
-    (re.compile(r"client\.post\(f\"/api/v1/images/preprocess/\{image_id\}\"\)"), """client.post(f"/api/v1/images/preprocess/{image_id}")
-    import json
-    from app.core.config import settings
-    meta_path = os.path.join(settings.UPLOAD_DIR, f"{image_id}_meta.json")
-    with open(meta_path, "r") as f:
-        meta = json.load(f)
-    meta["modality"] = "MRI"
-    with open(meta_path, "w") as f:
-        json.dump(meta, f)""")
-])
+fix_file('frontend/src/App.test.tsx', """import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import App from './App';
 
-fix_file('backend/tests/test_oa_analysis.py', [
-    (re.compile(r"client\.post\(f\"/api/v1/images/preprocess/\{image_id\}\"\)"), """client.post(f"/api/v1/images/preprocess/{image_id}")
-    import json
-    from app.core.config import settings
-    meta_path = os.path.join(settings.UPLOAD_DIR, f"{image_id}_meta.json")
-    with open(meta_path, "r") as f:
-        meta = json.load(f)
-    meta["modality"] = "MRI"
-    with open(meta_path, "w") as f:
-        json.dump(meta, f)""")
-])
+describe('App Component', () => {
+  it('renders without crashing and shows the sidebar navigation', () => {
+    render(<App />);
+    expect(screen.getByText('Overview')).toBeInTheDocument();
+    expect(screen.getByText('Imaging')).toBeInTheDocument();
+    expect(screen.getByText('Anatomy')).toBeInTheDocument();
+  });
+});
+""")
+
+fix_file('frontend/src/pages/CaseOverview.test.tsx', """import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { CaseOverview } from './CaseOverview';
+
+describe('CaseOverview Component', () => {
+  const mockPatient = {
+    name: 'Test',
+    age: '45',
+    sex: 'Male',
+    patientId: '123',
+    laterality: 'Right',
+    notes: ''
+  };
+
+  it('renders patient intake form', () => {
+    render(<CaseOverview patient={mockPatient} onChange={vi.fn()} onNext={vi.fn()} />);
+    expect(screen.getByText('Case Overview')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Test')).toBeInTheDocument();
+  });
+});
+""")

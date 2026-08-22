@@ -1,164 +1,238 @@
-.ana-workstation {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  background-color: var(--dark-bg);
-  color: var(--dark-text);
-}
-
-.ana-sidebar {
-  width: 280px;
-  background-color: var(--dark-surface);
-  border-right: 1px solid var(--dark-border);
+﻿.ana-container {
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
+  gap: 16px;
+  height: calc(100vh - 160px);
+}
+
+.ana-layout {
+  display: flex;
+  flex: 1;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.ana-panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  margin: 0 0 16px 0;
+}
+
+.ana-left-panel {
+  width: 250px;
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background: #f8fafc;
+}
+
+.ana-study-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   overflow-y: auto;
 }
 
-.ana-sidebar-right {
-  border-right: none;
-  border-left: 1px solid var(--dark-border);
+.ana-study-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
 }
 
-.ana-panel {
-  border-bottom: 1px solid var(--dark-border);
+.ana-study-item:hover {
+  background: #fff;
+  border-color: var(--color-border);
 }
 
-.ana-panel-header {
-  padding: var(--space-16);
+.ana-study-item.active {
+  background: #fff;
+  border-color: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ana-study-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  background: #000;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.ana-study-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ana-study-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ana-study-modality {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--dark-text-secondary);
-  text-transform: uppercase;
+  color: var(--color-primary);
 }
 
-.ana-layer-list, .ana-measure-controls, .ana-measure-summary {
-  padding: 0 var(--space-16) var(--space-16);
+.ana-study-filename {
+  font-size: 13px;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ana-center-panel {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  background: #050709;
+  position: relative;
 }
 
-.ana-layer-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-12);
-  font-size: 13px;
-  color: var(--dark-text);
-  cursor: pointer;
-  padding: var(--space-4) 0;
-  transition: opacity 0.2s;
-}
-
-.ana-layer-item:hover {
-  opacity: 0.8;
-}
-
-.ana-layer-toggle {
-  background: none;
-  border: none;
-  padding: 0;
-  display: flex;
+.ana-center-panel.empty {
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  color: #fff;
 }
 
-.text-success { color: #10B981; }
-.text-muted { color: var(--dark-text-secondary); }
-.text-primary { color: var(--color-primary); }
-
-.ana-layer-status {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--dark-text-secondary);
+.ana-toolbar {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(30,35,40,0.9);
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.ana-tool-list {
-  padding: 0 var(--space-16) var(--space-16);
+.ana-tools {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+  gap: 4px;
 }
 
 .ana-tool-btn {
   background: transparent;
-  border: 1px solid var(--dark-border);
-  color: var(--dark-text);
-  padding: var(--space-8) var(--space-12);
-  font-size: 12px;
-  text-align: left;
-  cursor: pointer;
+  border: none;
+  color: #a0aec0;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: var(--space-12);
-  border-radius: var(--radius-sm);
+  justify-content: center;
+  cursor: pointer;
   transition: all 0.2s;
 }
 
-.ana-tool-btn:hover:not(:disabled) {
-  background-color: rgba(255,255,255,0.05);
+.ana-tool-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
 }
 
 .ana-tool-btn.active {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  color: #FFF;
-}
-
-.ana-tool-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+  background: var(--color-primary);
+  color: #fff;
 }
 
 .ana-viewer-container {
   flex: 1;
   position: relative;
-  background-color: var(--dark-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
+  overflow: hidden;
 }
 
-.ana-empty {
-  color: var(--dark-text-secondary);
-  font-size: 14px;
+.ana-right-panel {
+  width: 300px;
+  border-left: 1px solid var(--color-border);
+  padding: 16px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
 .ana-findings-list {
-  padding: 0 var(--space-16) var(--space-16);
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: 12px;
 }
 
 .ana-finding-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ana-finding-item.disabled {
+  opacity: 0.5;
+}
+
+.ana-finding-item h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.ana-finding-val {
   font-size: 13px;
-  padding: var(--space-8) var(--space-12);
-  background-color: rgba(255,255,255,0.02);
-  border: 1px solid var(--dark-border);
-  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
 }
 
-.ana-finding-status {
-  color: #10B981;
-  font-size: 11px;
-  text-transform: uppercase;
+.ana-layer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.ana-summary-item {
+.ana-layer-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  background: #f8fafc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.ana-layer-item:hover {
+  background: #f1f5f9;
+}
+
+.ana-layer-toggle {
+  background: none;
+  border: none;
+  display: flex;
+  padding: 0;
+}
+
+.ana-layer-item span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ana-actions {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
-  padding: var(--space-6) 0;
-  border-bottom: 1px dashed var(--dark-border);
-}
-
-.ana-summary-label {
-  color: var(--dark-text-secondary);
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
 }

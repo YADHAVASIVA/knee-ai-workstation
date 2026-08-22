@@ -1,145 +1,116 @@
-import React from 'react';
+﻿import React from 'react';
+import type { CaseState, CaseImage } from '../types/case';
 import { Button } from '../components/ui/Button';
-import { AlertTriangle } from 'lucide-react';
 import './Analysis.css';
+import * as api from '../services/api';
 
 interface AnalysisProps {
-  modality?: string;
-  boneMeasurement: any;
-  meniscusMeasurement: any;
-  onAnalyze: () => void;
-  isProcessing: boolean;
+  caseState: CaseState;
+  setCaseState: React.Dispatch<React.SetStateAction<CaseState>>;
+  onBack: () => void;
+  onNext: () => void;
 }
 
-export const Analysis: React.FC<AnalysisProps> = ({
-  boneMeasurement,
-  meniscusMeasurement,
-  onAnalyze,
-  isProcessing
-}) => {
-  if (!isProcessing && !meniscusMeasurement) {
+export const Analysis: React.FC<AnalysisProps> = ({ caseState, setCaseState, onBack, onNext }) => {
+  const handleRunOaAnalysis = async () => {
+    // If not already run, maybe pick an image to run against or run against case ID
+    // For now we run OA on the active image or first valid one
+    const targetImage = caseState.images.find(img => img.id === caseState.activeImageId) || caseState.images[0];
+    if (!targetImage) return;
+
+    const oaRes = await api.analyzeOA(targetImage.id, {
+      age: parseInt(caseState.patient.age) || 45,
+      sex: caseState.patient.sex || 'Unknown',
+      oa_status: 'Unknown'
+    });
+
+    setCaseState(prev => ({ ...prev, oaAnalysis: oaRes }));
+  };
+
+  const renderImageMeasurements = (img: CaseImage) => {
+    
+    const isMRI = img.metadata?.modality === 'MRI';
+
     return (
-      <div className="analysis-empty">
-        <h2>OA-ASSOCIATED ANALYSIS</h2>
-        <p>Analyze anatomical measurements against population references.</p>
-        <div className="mt-5">
-          <Button variant="primary" onClick={onAnalyze} disabled={!boneMeasurement}>
-            {boneMeasurement ? 'START ANALYSIS' : 'Waiting for measurements...'}
-          </Button>
+      <div key={img.id} className="an-card">
+        <h4>{img.metadata?.modality} • {img.file?.name}</h4>
+        
+        <div className="an-measure-grid">
+          <div className="an-measure-col">
+            <h5>Femur</h5>
+            <div className="an-measure-val">
+              {img.measurements.bones?.femur?.width_mm 
+                ? `${img.measurements.bones.femur?.width_mm.toFixed(1)} mm` 
+                : 'N/A'}
+            </div>
+          </div>
+          <div className="an-measure-col">
+            <h5>Tibia</h5>
+            <div className="an-measure-val">
+              {img.measurements.bones?.tibia?.width_mm 
+                ? `${img.measurements.bones.tibia?.width_mm.toFixed(1)} mm` 
+                : 'N/A'}
+            </div>
+          </div>
+          {isMRI && (
+            <div className="an-measure-col">
+              <h5>Medial Meniscus</h5>
+              <div className="an-measure-val">
+                {img.measurements.meniscus?.mean_thickness_mm 
+                  ? `${img.measurements.meniscus.mean_thickness_mm.toFixed(2)} mm` 
+                  : 'N/A'}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
-  }
-
-  const mean_thickness = meniscusMeasurement?.mean_thickness_mm;
-  const medial_thickness = meniscusMeasurement?.medial_thickness_mm;
-  const lateral_thickness = meniscusMeasurement?.lateral_thickness_mm;
+  };
 
   return (
-    <div className="analysis-page">
-      <div className="analysis-header">
-        <h2 className="analysis-title">OA-ASSOCIATED ANALYSIS</h2>
+    <div className="an-container fade-in">
+      <div className="an-header">
+        <h2 className="an-title">Case Analysis Summary</h2>
+        <p className="an-subtitle">Aggregated findings from {caseState.images.length} imaging studies.</p>
       </div>
 
-      <div className="analysis-workspace">
-        <div className="analysis-col-left">
-          <div className="analysis-section">
-            <h3 className="analysis-section-title">Patient Context</h3>
-            <div className="analysis-metric-grid">
-              <div className="analysis-metric">
-                <span className="analysis-metric-label">Age</span>
-                <span className="analysis-metric-value">65</span>
-              </div>
-              <div className="analysis-metric">
-                <span className="analysis-metric-label">Sex</span>
-                <span className="analysis-metric-value">M</span>
-              </div>
-              <div className="analysis-metric">
-                <span className="analysis-metric-label">Clinical Status</span>
-                <span className="analysis-metric-value">Moderate</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="analysis-section mt-6">
-            <h3 className="analysis-section-title">Anatomical Measurements</h3>
-            
-            <div className="analysis-measure-group">
-              <h4>Femur</h4>
-              <div className="analysis-measure-row">
-                <span>Width</span>
-                <span>{boneMeasurement?.femur?.width_mm ? `${boneMeasurement.femur.width_mm.toFixed(2)} mm` : 'Not measured'}</span>
-              </div>
-              <div className="analysis-measure-row">
-                <span>AP</span>
-                <span>{boneMeasurement?.femur?.ap_dimension_mm ? `${boneMeasurement.femur.ap_dimension_mm.toFixed(2)} mm` : 'Not measured'}</span>
-              </div>
-            </div>
-
-            <div className="analysis-measure-group">
-              <h4>Tibia</h4>
-              <div className="analysis-measure-row">
-                <span>Width</span>
-                <span>{boneMeasurement?.tibia?.width_mm ? `${boneMeasurement.tibia.width_mm.toFixed(2)} mm` : 'Not measured'}</span>
-              </div>
-              <div className="analysis-measure-row">
-                <span>AP</span>
-                <span>{boneMeasurement?.tibia?.ap_dimension_mm ? `${boneMeasurement.tibia.ap_dimension_mm.toFixed(2)} mm` : 'Not measured'}</span>
-              </div>
-            </div>
-
-            <div className="analysis-measure-group">
-              <h4>Meniscus</h4>
-              <div className="analysis-measure-row">
-                <span>Medial</span>
-                <span>{medial_thickness ? `${medial_thickness.toFixed(2)} mm` : 'Not measured'}</span>
-              </div>
-              <div className="analysis-measure-row">
-                <span>Lateral</span>
-                <span>{lateral_thickness ? `${lateral_thickness.toFixed(2)} mm` : 'Not measured'}</span>
-              </div>
-              <div className="analysis-measure-row">
-                <span>Mean</span>
-                <span>{mean_thickness ? `${mean_thickness.toFixed(2)} mm` : 'Not measured'}</span>
-              </div>
-            </div>
-          </div>
+      <div className="an-layout">
+        <div className="an-main-col">
+          <h3 className="an-section-title">Anatomical Measurements</h3>
+          {caseState.images.filter(img => img.segmentation !== null).map(renderImageMeasurements)}
         </div>
-
-        <div className="analysis-col-right">
-          <div className="analysis-section">
-            <h3 className="analysis-section-title">Population Comparison</h3>
-            
-            <div className="analysis-prototype-warning">
-              <div className="warning-icon"><AlertTriangle size={16} /></div>
-              <div className="warning-content">
-                <strong>RESEARCH PROTOTYPE</strong>
-                <p>Synthetic reference dataset &mdash; not clinical evidence.</p>
+        
+        <div className="an-side-col">
+          <div className="an-card">
+            <h3 className="an-section-title">OA-Associated Analysis</h3>
+            {!caseState.oaAnalysis ? (
+              <div className="an-empty-state">
+                <p>Run analysis to detect potential OA indicators across studies.</p>
+                <Button onClick={handleRunOaAnalysis}>Run Case OA Analysis</Button>
               </div>
-            </div>
-
-            <div className="analysis-comparison mt-6">
-              <p className="text-sm text-muted mb-4">Patient Meniscus Mean Thickness vs Reference Population</p>
-              
-              {mean_thickness ? (
-                <div className="comparison-visual">
-                  <div className="comparison-track">
-                    <span className="comp-label left">Lower</span>
-                    <div className="comp-line">
-                      <div className="comp-marker" style={{ left: '50%' }}>●</div>
-                      <div className="comp-marker-label" style={{ left: '50%' }}>
-                        Patient<br/>{mean_thickness.toFixed(2)}
-                      </div>
-                    </div>
-                    <span className="comp-label right">Upper</span>
-                  </div>
+            ) : (
+              <div className="an-oa-results">
+                <div className="an-oa-row">
+                  <span>Joint Space Narrowing</span>
+                  <strong>{caseState.oaAnalysis.patient_findings.joint_space_narrowing}</strong>
                 </div>
-              ) : (
-                <div className="text-muted text-sm text-center">Patient measurement unavailable for comparison.</div>
-              )}
-            </div>
+                <div className="an-oa-row">
+                  <span>Osteophytes</span>
+                  <strong>{caseState.oaAnalysis.patient_findings.osteophytes}</strong>
+                </div>
+                <div className="an-oa-row">
+                  <span>Sclerosis</span>
+                  <strong>{caseState.oaAnalysis.patient_findings.sclerosis}</strong>
+                </div>
+              </div>
+            )}
           </div>
         </div>
+      </div>
+
+      <div className="an-actions">
+        <Button variant="ghost" onClick={onBack}>&larr; Back to Anatomy</Button>
+        <Button variant="primary" onClick={onNext}>Continue to Implant Planning &rarr;</Button>
       </div>
     </div>
   );
