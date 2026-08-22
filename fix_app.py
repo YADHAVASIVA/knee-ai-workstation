@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import os
+
+filepath = os.path.join("frontend", "src", "App.tsx")
+content = '''import { useEffect, useState } from 'react';
 import * as api from './services/api';
 import { getSystemInfo, uploadImage, preprocessImage, getPreviewUrl, analyzeAnatomy, getMaskUrl, measureMeniscus, analyzeOA, measureBoneAnatomy, matchImplants } from './services/api';
 import { useAnalysisWorkflow, WorkflowState } from './hooks/useAnalysisWorkflow';
 import './App.css';
 
 import { AppShell } from './components/shell/AppShell';
-
+import type { RouteId } from './components/shell/Sidebar';
 import { CaseOverview } from './pages/CaseOverview';
 import { Anatomy } from './pages/Anatomy';
 import { Analysis } from './pages/Analysis';
@@ -287,3 +290,7 @@ function App() {
 }
 
 export default App;
+'''
+
+with open(filepath, "w", encoding="utf-8") as f:
+    f.write(content)
