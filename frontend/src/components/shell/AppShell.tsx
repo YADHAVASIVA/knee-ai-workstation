@@ -1,18 +1,17 @@
 import React from 'react';
 import { Sidebar } from './Sidebar';
-import type { RouteId } from './Sidebar';
 import { TopBar } from './TopBar';
 import './shell.css';
 
 interface AppShellProps {
   children: React.ReactNode;
   activeRoute: string;
-  onNavigate: (route: RouteId) => void;
+  onNavigate: (route: string) => void;
   analysisId: string | null;
   isDemo: boolean;
   isCalibrated: boolean | null;
   imageMetadata?: any;
-  routes: Array<{ id: RouteId; label: string; category: string; disabled?: boolean }>;
+  routes: Array<{ id: string; label: string; category: string; disabled?: boolean }>;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({

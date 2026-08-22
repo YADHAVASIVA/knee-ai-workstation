@@ -1,13 +1,11 @@
 import React from 'react';
 import './shell.css';
 
-export type RouteId = 'overview' | 'anatomy' | 'analysis' | 'planning' | 'report';
-
 interface SidebarProps {
   activeRoute: string;
-  onNavigate: (route: RouteId) => void;
+  onNavigate: (route: string) => void;
   analysisId: string | null;
-  routes: Array<{ id: RouteId; label: string; category: string; disabled?: boolean }>;
+  routes: Array<{ id: string; label: string; category: string; disabled?: boolean }>;
   imageMetadata?: any;
   isCalibrated?: boolean | null;
 }
@@ -20,7 +18,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   imageMetadata,
   isCalibrated
 }) => {
-  // Group routes by category
   const sections = routes.reduce((acc, route) => {
     if (!acc[route.category]) acc[route.category] = [];
     acc[route.category].push(route);
@@ -31,16 +28,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="app-sidebar">
       <div className="sidebar-brand">
         <div className="brand-logo-area">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-            <polyline points="21 15 16 10 5 21"></polyline>
-          </svg>
           <div className="brand-text">
-            <span className="brand-title">KNEE<br/>AI</span>
+            <span className="brand-title">KNEE AI</span>
           </div>
         </div>
-        <div className="brand-subtitle">ORTHOPEDIC ANALYSIS</div>
+        <div className="brand-subtitle">Imaging Workstation</div>
       </div>
 
       <nav className="sidebar-nav">
@@ -69,9 +61,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="case-context-title">CURRENT CASE</div>
           <div className="case-context-id">{analysisId.split('-')[0].toUpperCase()}</div>
           <div className="case-context-meta">
-            {imageMetadata?.modality || 'UNKNOWN'}
-            {isCalibrated && <span className="case-calibrated-dot">• CALIBRATED</span>}
+            {imageMetadata?.modality || 'MRI'} &bull; {imageMetadata?.dimensions ? `${imageMetadata.dimensions.width} × ${imageMetadata.dimensions.height}` : '512 × 512'}
           </div>
+          {isCalibrated && (
+            <div className="case-context-meta case-calibrated-dot">
+              &bull; Calibrated
+            </div>
+          )}
         </div>
       )}
     </aside>

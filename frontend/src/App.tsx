@@ -229,7 +229,6 @@ function App() {
             onToggleMeasurements={setShowMeniscusLines}
             showBoneMeasurements={showBoneLines}
             onToggleBoneMeasurements={setShowBoneLines}
-            isDemo={true}
           />
         );
       case 'analysis':
@@ -287,3 +286,4 @@ function App() {
 }
 
 export default App;
+

@@ -17,13 +17,13 @@ export const TopBar: React.FC<TopBarProps> = ({
   isCalibrated,
   imageMetadata
 }) => {
-  const getBreadcrumb = () => {
+  const getContextName = () => {
     switch(activeRoute) {
-      case 'overview': return 'CASE / OVERVIEW';
-      case 'anatomy': return 'ANATOMY / IMAGE ANALYSIS';
-      case 'analysis': return 'ANALYSIS / OA ASSESSMENT';
-      case 'planning': return 'PLANNING / IMPLANT PLANNING';
-      case 'report': return 'OUTPUT / CLINICAL REPORT';
+      case 'overview': return 'Overview';
+      case 'anatomy': return 'Anatomy';
+      case 'analysis': return 'OA Analysis';
+      case 'planning': return 'Implant Planning';
+      case 'report': return 'Report';
       default: return '';
     }
   };
@@ -31,28 +31,32 @@ export const TopBar: React.FC<TopBarProps> = ({
   return (
     <header className="app-topbar">
       <div className="topbar-left">
-        <div className="topbar-breadcrumb">{getBreadcrumb()}</div>
+        <div className="topbar-brand-inline">KNEE AI</div>
+        <div className="topbar-breadcrumb">
+          Case <span className="breadcrumb-slash">/</span> {getContextName()}
+        </div>
       </div>
-      
-      
       
       <div className="topbar-right">
         {analysisId && (
-          <div className="topbar-case-id">Case {analysisId.split('-')[0].toUpperCase()}</div>
+          <div className="topbar-case-id">{analysisId.split('-')[0].toUpperCase()}</div>
         )}
         {imageMetadata?.modality && (
-          <div className="topbar-meta-item">{imageMetadata.modality}</div>
+          <div className="topbar-meta-item">
+            <div className="topbar-meta-dot"></div>
+            {imageMetadata.modality}
+          </div>
         )}
         {isCalibrated !== null && (
-          <div className="topbar-meta-item">
-            {isCalibrated ? 'CALIBRATED' : 'UNCALIBRATED'}
+          <div className={`topbar-meta-item ${isCalibrated ? 'calibrated' : ''}`}>
+            <div className="topbar-meta-dot"></div>
+            {isCalibrated ? 'Calibrated' : 'Uncalibrated'}
           </div>
         )}
         {isDemo && (
-          <StatusBadge status="DEMO" label="RESEARCH PROTOTYPE" />
+          <StatusBadge status="DEMO" label="DEMO" />
         )}
       </div>
     </header>
   );
 };
-
