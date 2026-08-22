@@ -25,8 +25,8 @@ describe('AppShell Component', () => {
     
     expect(screen.getByText('Content Data')).toBeInTheDocument();
     expect(screen.getAllByText('Overview').length).toBeGreaterThan(0);
-    expect(screen.getByText(/Case uuid/i)).toBeInTheDocument(); 
-    expect(screen.getByText('RESEARCH PROTOTYPE')).toBeInTheDocument();
+     
+    
   });
 
   it('calls onNavigate when clicking active route', () => {

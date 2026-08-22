@@ -1,7 +1,4 @@
 import React from 'react';
-import { Card } from '../components/ui/Card';
-import { SectionHeader } from '../components/ui/SectionHeader';
-import { StatusBadge } from '../components/ui/StatusBadge';
 import { Button } from '../components/ui/Button';
 import './ImplantPlanning.css';
 
@@ -21,13 +18,11 @@ export const ImplantPlanning: React.FC<ImplantPlanningProps> = ({
   if (!matchingResult && !isProcessing) {
     return (
       <div className="planning-empty">
-        <SectionHeader 
-          title="IMPLANT PLANNING" 
-          description="Compare patient anatomy against the implant database to find potential matches." 
-        />
-        <div className="planning-empty-action mt-5">
+        <h2>POTENTIAL ANATOMICAL MATCHES</h2>
+        <p>Dimension-based comparison against the demonstration implant database.</p>
+        <div className="mt-5">
           <Button variant="primary" onClick={onMatch} disabled={!boneMeasurement}>
-            {boneMeasurement ? 'FIND POTENTIAL MATCHES' : 'Waiting for measurements...'}
+            {boneMeasurement ? 'FIND MATCHES' : 'Waiting for measurements...'}
           </Button>
         </div>
       </div>
@@ -37,7 +32,8 @@ export const ImplantPlanning: React.FC<ImplantPlanningProps> = ({
   if (isProcessing) {
     return (
       <div className="planning-empty">
-        <SectionHeader title="PROCESSING IMPLANT MATCHES" description="Querying database and calculating geometrical fit..." />
+        <h2>PROCESSING MATCHES</h2>
+        <p>Querying demonstration database...</p>
       </div>
     );
   }
@@ -47,101 +43,101 @@ export const ImplantPlanning: React.FC<ImplantPlanningProps> = ({
   return (
     <div className="planning-page">
       <div className="planning-header">
-        <h2 className="planning-title">IMPLANT PLANNING</h2>
-        <p className="planning-subtitle">Potential anatomical matches based on geometric analysis.</p>
+        <h2 className="planning-title">POTENTIAL ANATOMICAL MATCHES</h2>
+        <p className="planning-subtitle">Dimension-based comparison against the demonstration implant database.</p>
       </div>
 
       <div className="planning-workspace">
         <div className="planning-col-left">
-          <Card className="ui-card">
-            <h3 className="ui-card-title">PATIENT ANATOMY</h3>
+          <div className="planning-section">
+            <h3 className="planning-section-title">Patient Anatomy</h3>
             {boneMeasurement?.femur && (
               <div className="planning-measure-group">
-                <h4 className="planning-measure-title">FEMUR</h4>
+                <h4>Femur</h4>
                 <div className="planning-measure-row">
-                  <span className="planning-measure-label">Width</span>
-                  <span className="planning-measure-value">
-                    {boneMeasurement.femur.width_mm ? `${boneMeasurement.femur.width_mm.toFixed(1)} mm` : 'N/A'}
-                  </span>
+                  <span>Width</span>
+                  <span>{boneMeasurement.femur.width_mm ? `${boneMeasurement.femur.width_mm.toFixed(2)} mm` : 'Unavailable'}</span>
                 </div>
                 <div className="planning-measure-row">
-                  <span className="planning-measure-label">AP Dimension</span>
-                  <span className="planning-measure-value">
-                    {boneMeasurement.femur.ap_dimension_mm ? `${boneMeasurement.femur.ap_dimension_mm.toFixed(1)} mm` : 'N/A'}
-                  </span>
+                  <span>AP</span>
+                  <span>{boneMeasurement.femur.ap_dimension_mm ? `${boneMeasurement.femur.ap_dimension_mm.toFixed(2)} mm` : 'Unavailable'}</span>
                 </div>
               </div>
             )}
-          </Card>
-
-          <Card className="ui-card">
-            <h3 className="ui-card-title">DATABASE</h3>
-            <div className="mt-2">
-              <StatusBadge status="DEMO" label="DEMONSTRATION DATABASE" />
-              <p className="planning-demo-text mt-3 text-muted" style={{ fontSize: '12px' }}>
-                Synthetic specifications. Not for clinical or surgical use.
-              </p>
-            </div>
-          </Card>
+            {boneMeasurement?.tibia && (
+              <div className="planning-measure-group">
+                <h4>Tibia</h4>
+                <div className="planning-measure-row">
+                  <span>Width</span>
+                  <span>{boneMeasurement.tibia.width_mm ? `${boneMeasurement.tibia.width_mm.toFixed(2)} mm` : 'Unavailable'}</span>
+                </div>
+                <div className="planning-measure-row">
+                  <span>AP</span>
+                  <span>{boneMeasurement.tibia.ap_dimension_mm ? `${boneMeasurement.tibia.ap_dimension_mm.toFixed(2)} mm` : 'Unavailable'}</span>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="planning-demo-warning mt-6">
+            <strong>DEMONSTRATION DATABASE</strong>
+            <p>Synthetic specifications. Not for clinical or surgical use.</p>
+          </div>
         </div>
 
         <div className="planning-col-right">
-          <Card className="ui-card planning-results-card">
-            <div className="planning-results-header">
-              <h3 className="ui-card-title mb-0 border-0">POTENTIAL MATCHES (FEMORAL)</h3>
-              <StatusBadge 
-                status={matchingResult?.calibration_available ? 'CALIBRATED' : 'UNCALIBRATED'} 
-                label={matchingResult?.calibration_available ? 'Physical scale verified' : 'Pixel approximation'} 
-              />
-            </div>
-
+          <div className="planning-section">
+            <h3 className="planning-section-title">Potential Anatomical Matches</h3>
+            
             {femoralCandidates.length === 0 ? (
-              <div className="planning-no-match">
-                <h4>NO POTENTIAL MATCH FOUND</h4>
-                <p>No components in the database fit the patient\'s anatomical parameters.</p>
-              </div>
+              <div className="text-muted mt-4">No components found.</div>
             ) : (
-              <div className="planning-table-wrapper mt-4">
-                <table className="planning-table">
-                  <thead>
-                    <tr>
-                      <th className="rank-col">RANK</th>
-                      <th>COMPONENT</th>
-                      <th className="num-col">WIDTH (mm)</th>
-                      <th className="num-col">AP (mm)</th>
-                      <th className="num-col">SCORE</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {femoralCandidates.map((c: any, idx: number) => (
-                      <tr key={c.implant.id} className={idx === 0 ? 'top-match' : ''}>
-                        <td className="rank-col">{String(idx + 1).padStart(2, '0')}</td>
-                        <td>
-                          <div className="comp-name">Femoral Size {c.implant.size_designation}</div>
-                          <div className="comp-meta">{c.implant.manufacturer}</div>
-                        </td>
-                        <td className="num-col">
-                          <div className="comp-val">{c.implant.width_mm.toFixed(1)}</div>
-                          <div className="comp-diff">
-                            Δ {Math.abs(c.implant.width_mm - boneMeasurement.femur.width_mm).toFixed(1)}
-                          </div>
-                        </td>
-                        <td className="num-col">
-                          <div className="comp-val">{c.implant.ap_dimension_mm.toFixed(1)}</div>
-                          <div className="comp-diff">
-                            Δ {Math.abs(c.implant.ap_dimension_mm - boneMeasurement.femur.ap_dimension_mm).toFixed(1)}
-                          </div>
-                        </td>
-                        <td className="num-col">
-                          <div className="comp-score">{(c.score * 100).toFixed(1)}</div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="planning-matches-list">
+                {femoralCandidates.map((c: any, idx: number) => (
+                  <div key={c.implant.id} className="planning-match-card">
+                    <div className="match-rank">Rank #{idx + 1}</div>
+                    <div className="match-details">
+                      <div className="match-name">Femoral Component - Size {c.implant.size_designation}</div>
+                      
+                      <div className="match-comparison mt-3">
+                        <div className="match-comp-row">
+                          <span className="match-comp-label">Patient width:</span>
+                          <span className="match-comp-val">{boneMeasurement?.femur?.width_mm?.toFixed(2)} mm</span>
+                        </div>
+                        <div className="match-comp-row">
+                          <span className="match-comp-label">Component width:</span>
+                          <span className="match-comp-val">{c.implant.width_mm.toFixed(2)} mm</span>
+                        </div>
+                        <div className="match-comp-row border-top">
+                          <span className="match-comp-label">Difference:</span>
+                          <span className="match-comp-val">{Math.abs(c.implant.width_mm - (boneMeasurement?.femur?.width_mm || 0)).toFixed(2)} mm</span>
+                        </div>
+                      </div>
+
+                      <div className="match-comparison mt-3">
+                        <div className="match-comp-row">
+                          <span className="match-comp-label">Patient AP:</span>
+                          <span className="match-comp-val">{boneMeasurement?.femur?.ap_dimension_mm?.toFixed(2)} mm</span>
+                        </div>
+                        <div className="match-comp-row">
+                          <span className="match-comp-label">Component AP:</span>
+                          <span className="match-comp-val">{c.implant.ap_dimension_mm.toFixed(2)} mm</span>
+                        </div>
+                        <div className="match-comp-row border-top">
+                          <span className="match-comp-label">Difference:</span>
+                          <span className="match-comp-val">{Math.abs(c.implant.ap_dimension_mm - (boneMeasurement?.femur?.ap_dimension_mm || 0)).toFixed(2)} mm</span>
+                        </div>
+                      </div>
+                      
+                      <div className="match-score mt-3">
+                        Match score: {(c.score * 100).toFixed(1)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
-          </Card>
+          </div>
         </div>
       </div>
     </div>

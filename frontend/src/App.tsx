@@ -206,12 +206,6 @@ function App() {
             analysisId={analysisId}
             imageMetadata={imageMetadata}
             previewUrl={previewUrl}
-            patientData={patientData}
-            segmentationResult={segmentationResult}
-            boneMeasurement={boneMeasurement}
-            meniscusMeasurement={meniscusMeasurement}
-            oaResult={oaResult}
-            matchingResult={matchingResult}
             onNavigate={handleNavigate as any}
             onUpload={handleFileUpload}
             onReset={handleResetAnalysis}
@@ -253,15 +247,12 @@ function App() {
         );
       case 'report':
         return (
-          <Report
+          <Report onNavigate={handleNavigate as any}
             analysisId={analysisId}
-            patientData={patientData}
             imageMetadata={imageMetadata}
             boneMeasurement={boneMeasurement}
             meniscusMeasurement={meniscusMeasurement}
-            oaResult={oaResult}
             matchingResult={matchingResult}
-            onPrint={() => window.print()}
           />
         );
       default:

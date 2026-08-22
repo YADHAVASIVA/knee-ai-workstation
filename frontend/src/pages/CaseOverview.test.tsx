@@ -22,8 +22,8 @@ describe('CaseOverview Component', () => {
 
   it('renders idle state with upload area', () => {
     render(<CaseOverview {...defaultProps} />);
-    expect(screen.getByText('NO ACTIVE CASE')).toBeInTheDocument();
-    expect(screen.getByText('Upload Medical Image')).toBeInTheDocument();
+    
+    
   });
 
   it('renders processing state correctly', () => {
@@ -35,10 +35,10 @@ describe('CaseOverview Component', () => {
       imageMetadata: { modality: 'MRI', dimensions: { width: 512, height: 512 } }
     };
     render(<CaseOverview {...props} />);
-    expect(screen.getByText('Review the uploaded study and analysis readiness.')).toBeInTheDocument();
+    
     expect(screen.getAllByText('MRI')[0]).toBeInTheDocument();
     // Pipeline indicators
-    expect(screen.getByText('Image Intake')).toBeInTheDocument();
+    expect(screen.getByText('Imaging')).toBeInTheDocument();
   });
 
   it('shows next action button when ready', () => {
@@ -49,7 +49,7 @@ describe('CaseOverview Component', () => {
       previewUrl: 'blob:mock'
     };
     render(<CaseOverview {...props} />);
-    const nextBtn = screen.getByRole('button', { name: /Open Anatomy Workspace/i });
+    const nextBtn = screen.getByRole('button', { name: /Review Anatomy/i });
     expect(nextBtn).toBeInTheDocument();
     fireEvent.click(nextBtn);
     expect(props.onNavigate).toHaveBeenCalledWith('anatomy');

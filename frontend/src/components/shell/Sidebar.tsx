@@ -27,12 +27,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside className="app-sidebar">
       <div className="sidebar-brand">
-        <div className="brand-logo-area">
-          <div className="brand-text">
-            <span className="brand-title">KNEE AI</span>
-          </div>
-        </div>
-        <div className="brand-subtitle">Imaging Workstation</div>
+        <div className="brand-title">KNEE AI</div>
+        <div className="brand-subtitle">Medical Imaging Workstation</div>
       </div>
 
       <nav className="sidebar-nav">
@@ -61,13 +57,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="case-context-title">CURRENT CASE</div>
           <div className="case-context-id">{analysisId.split('-')[0].toUpperCase()}</div>
           <div className="case-context-meta">
-            {imageMetadata?.modality || 'MRI'} &bull; {imageMetadata?.dimensions ? `${imageMetadata.dimensions.width} × ${imageMetadata.dimensions.height}` : '512 × 512'}
+            {imageMetadata?.modality || 'MRI'} &bull; {imageMetadata?.dimensions ? `${imageMetadata.dimensions.width} × ${imageMetadata.dimensions.height}` : 'Unavailable'}
           </div>
-          {isCalibrated && (
-            <div className="case-context-meta case-calibrated-dot">
-              &bull; Calibrated
-            </div>
-          )}
+          <div className={`case-context-meta ${isCalibrated ? 'success' : 'warning'}`}>
+            &bull; {isCalibrated ? 'Calibrated' : 'Uncalibrated'}
+          </div>
         </div>
       )}
     </aside>

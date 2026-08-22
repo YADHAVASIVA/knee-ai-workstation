@@ -1,52 +1,32 @@
-import re
+﻿import os
 
-# App.tsx
-with open("frontend/src/App.tsx", "r", encoding="utf-8") as f:
-    content = f.read()
+# Fix App.tsx
+with open('frontend/src/App.tsx', 'r', encoding='utf-8') as f:
+    app = f.read()
+app = app.replace('patientData={patientData}\n', '')
+app = app.replace('oaResult={oaResult}\n', '')
+with open('frontend/src/App.tsx', 'w', encoding='utf-8') as f:
+    f.write(app)
 
-unused_imports = [
-    "import { UploadArea } from './components/UploadArea';\n",
-    "import { MedicalImageViewer } from './components/MedicalImageViewer';\n",
-    "import { OAAnalysisPanel } from './components/OAAnalysisPanel';\n",
-    "import { ImplantDatabasePanel } from './components/ImplantDatabasePanel';\n",
-    "import { ImplantMatchingPanel } from './components/ImplantMatchingPanel';\n",
-    "import { ProgressSteps } from './components/ProgressSteps';\n",
-    "import { GlobalWarnings } from './components/GlobalWarnings';\n",
-    "import { AnalysisSummaryCard } from './components/AnalysisSummaryCard';\n",
-    "import { PatientProfileCard } from './components/PatientProfileCard';\n",
-    "import { AnatomicalResultsCard } from './components/AnatomicalResultsCard';\n",
-    "import { ReportPreviewModal } from './components/ReportPreviewModal';\n",
-]
-for imp in unused_imports:
-    content = content.replace(imp, "")
+# Fix Report.tsx
+with open('frontend/src/pages/Report.tsx', 'r', encoding='utf-8') as f:
+    rep = f.read()
+rep = rep.replace('  patientData: any;\n', '')
+rep = rep.replace('  oaResult: any;\n', '')
+rep = rep.replace('  patientData,\n', '')
+rep = rep.replace('  oaResult,\n', '')
+with open('frontend/src/pages/Report.tsx', 'w', encoding='utf-8') as f:
+    f.write(rep)
 
-content = content.replace("  const [systemInfo, setSystemInfo] = useState<SystemInfoResponse | null>(null);", "")
-content = content.replace("        setSystemInfo(sysInfo);", "")
-content = content.replace("  const [showReport, setShowReport] = useState<boolean>(false);\n  const [showImplantDb, setShowImplantDb] = useState<boolean>(false);", "")
-content = content.replace("errorMsg, setErrorMsg, ", "setErrorMsg, ")
-content = content.replace("setPatientData, ", "")
-content = content.replace("  const toggleAllOverlays = (show: boolean) => {\n    setOverlays(prev => prev.map(o => ({ ...o, visible: show })));\n  };", "")
+# Fix CaseOverview.tsx
+with open('frontend/src/pages/CaseOverview.tsx', 'r', encoding='utf-8') as f:
+    co = f.read()
+co = co.replace('  patientData,\n', '')
+co = co.replace('  segmentationResult,\n', '')
+co = co.replace('  boneMeasurement,\n', '')
+co = co.replace('  meniscusMeasurement,\n', '')
+co = co.replace('  oaResult,\n', '')
+co = co.replace('  matchingResult,\n', '')
+with open('frontend/src/pages/CaseOverview.tsx', 'w', encoding='utf-8') as f:
+    f.write(co)
 
-with open("frontend/src/App.tsx", "w", encoding="utf-8") as f:
-    f.write(content)
-
-# MedicalImageViewer.tsx
-with open("frontend/src/components/MedicalImageViewer.tsx", "r", encoding="utf-8") as f:
-    content = f.read()
-
-content = content.replace(
-    "onToggleOverlay,\n  showMeasurements = true,\n  onToggleMeasurements,\n  showBoneMeasurements = true,\n  onToggleBoneMeasurements",
-    "showMeasurements = true,\n  showBoneMeasurements = true,"
-)
-
-with open("frontend/src/components/MedicalImageViewer.tsx", "w", encoding="utf-8") as f:
-    f.write(content)
-
-# Report.tsx
-with open("frontend/src/pages/Report.tsx", "r", encoding="utf-8") as f:
-    content = f.read()
-
-content = content.replace("  oaResult,\n", "")
-
-with open("frontend/src/pages/Report.tsx", "w", encoding="utf-8") as f:
-    f.write(content)

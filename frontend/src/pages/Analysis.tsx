@@ -1,7 +1,4 @@
 import React from 'react';
-import { Card } from '../components/ui/Card';
-import { SectionHeader } from '../components/ui/SectionHeader';
-import { StatusBadge } from '../components/ui/StatusBadge';
 import { Button } from '../components/ui/Button';
 import type { PatientData } from '../services/api';
 import './Analysis.css';
@@ -26,13 +23,11 @@ export const Analysis: React.FC<AnalysisProps> = ({
   if (!oaResult && !isProcessing) {
     return (
       <div className="analysis-empty">
-        <SectionHeader 
-          title="OA ANALYSIS" 
-          description="Analyze the anatomical measurements against population data." 
-        />
-        <div className="analysis-empty-action mt-5">
+        <h2>OA-ASSOCIATED ANALYSIS</h2>
+        <p>Analyze anatomical measurements against population references.</p>
+        <div className="mt-5">
           <Button variant="primary" onClick={onAnalyze} disabled={!boneMeasurement}>
-            {boneMeasurement ? 'START OA ANALYSIS' : 'Waiting for measurements...'}
+            {boneMeasurement ? 'START ANALYSIS' : 'Waiting for measurements...'}
           </Button>
         </div>
       </div>
@@ -42,120 +37,121 @@ export const Analysis: React.FC<AnalysisProps> = ({
   if (isProcessing) {
     return (
       <div className="analysis-empty">
-        <SectionHeader title="PROCESSING OA ANALYSIS" description="Comparing patient anatomy to population references..." />
+        <h2>PROCESSING ANALYSIS</h2>
+        <p>Comparing patient anatomy to population references...</p>
       </div>
     );
   }
 
+  const mean_thickness = meniscusMeasurement?.mean_thickness_mm;
+  // Make sure not to use hardcoded fake patient values
+  const medial_thickness = meniscusMeasurement?.medial_thickness_mm;
+  const lateral_thickness = meniscusMeasurement?.lateral_thickness_mm;
+  const isSynthetic = true; // explicitly mark as prototype
+
   return (
     <div className="analysis-page">
       <div className="analysis-header">
-        <h2 className="analysis-title">OSTEOARTHRITIS-ASSOCIATED ANALYSIS</h2>
-        <p className="analysis-subtitle">Population comparison and structural findings.</p>
+        <h2 className="analysis-title">OA-ASSOCIATED ANALYSIS</h2>
       </div>
 
       <div className="analysis-workspace">
-        {/* LEFT COLUMN: PATIENT CONTEXT & MEASUREMENTS */}
         <div className="analysis-col-left">
-          <Card className="ui-card">
-            <h3 className="ui-card-title">PATIENT CONTEXT</h3>
+          <div className="analysis-section">
+            <h3 className="analysis-section-title">Patient Context</h3>
             <div className="analysis-metric-grid">
               <div className="analysis-metric">
                 <span className="analysis-metric-label">Age</span>
-                <span className="analysis-metric-value">{patientData.age !== null ? patientData.age : 'UNKNOWN'}</span>
+                <span className="analysis-metric-value">{patientData.age ?? 'Unavailable'}</span>
               </div>
               <div className="analysis-metric">
                 <span className="analysis-metric-label">Sex</span>
-                <span className="analysis-metric-value">{patientData.sex || 'UNKNOWN'}</span>
+                <span className="analysis-metric-value">{patientData.sex || 'Unavailable'}</span>
               </div>
               <div className="analysis-metric">
-                <span className="analysis-metric-label">Clinical OA Status</span>
-                <span className="analysis-metric-value">{patientData.oa_status || 'UNKNOWN'}</span>
+                <span className="analysis-metric-label">Clinical Status</span>
+                <span className="analysis-metric-value">{patientData.oa_status || 'Unavailable'}</span>
               </div>
             </div>
-          </Card>
+          </div>
 
-          <Card className="ui-card">
-            <h3 className="ui-card-title">KEY MEASUREMENTS</h3>
-            <div className="analysis-measure-list">
-              <div className="analysis-measure-item">
-                <span className="analysis-measure-label">Meniscus Mean Thickness</span>
-                <span className="analysis-measure-value">
-                  {meniscusMeasurement?.mean_thickness_mm ? `${meniscusMeasurement.mean_thickness_mm.toFixed(2)} mm` : 'Unavailable'}
-                </span>
+          <div className="analysis-section mt-6">
+            <h3 className="analysis-section-title">Anatomical Measurements</h3>
+            
+            <div className="analysis-measure-group">
+              <h4>Femur</h4>
+              <div className="analysis-measure-row">
+                <span>Width</span>
+                <span>{boneMeasurement?.femur?.width_mm ? `${boneMeasurement.femur.width_mm.toFixed(2)} mm` : 'Not measured'}</span>
               </div>
-              <div className="analysis-measure-item">
-                <span className="analysis-measure-label">Femoral Width</span>
-                <span className="analysis-measure-value">
-                  {boneMeasurement?.femur?.width_mm ? `${boneMeasurement.femur.width_mm.toFixed(2)} mm` : 'Unavailable'}
-                </span>
-              </div>
-              <div className="analysis-measure-item">
-                <span className="analysis-measure-label">Tibial Width</span>
-                <span className="analysis-measure-value">
-                  {boneMeasurement?.tibia?.width_mm ? `${boneMeasurement.tibia.width_mm.toFixed(2)} mm` : 'Unavailable'}
-                </span>
+              <div className="analysis-measure-row">
+                <span>AP</span>
+                <span>{boneMeasurement?.femur?.ap_dimension_mm ? `${boneMeasurement.femur.ap_dimension_mm.toFixed(2)} mm` : 'Not measured'}</span>
               </div>
             </div>
-          </Card>
 
-          <Card className="ui-card">
-            <h3 className="ui-card-title">DATA SOURCE</h3>
-            <div className="mt-2">
-              <StatusBadge status="DEMO" label="DEMONSTRATION DATA" />
-              <p className="analysis-demo-text mt-3 text-muted" style={{ fontSize: '12px' }}>
-                Comparisons are generated using a synthetic research dataset. Not for clinical diagnostic use.
-              </p>
+            <div className="analysis-measure-group">
+              <h4>Tibia</h4>
+              <div className="analysis-measure-row">
+                <span>Width</span>
+                <span>{boneMeasurement?.tibia?.width_mm ? `${boneMeasurement.tibia.width_mm.toFixed(2)} mm` : 'Not measured'}</span>
+              </div>
+              <div className="analysis-measure-row">
+                <span>AP</span>
+                <span>{boneMeasurement?.tibia?.ap_dimension_mm ? `${boneMeasurement.tibia.ap_dimension_mm.toFixed(2)} mm` : 'Not measured'}</span>
+              </div>
             </div>
-          </Card>
+
+            <div className="analysis-measure-group">
+              <h4>Meniscus</h4>
+              <div className="analysis-measure-row">
+                <span>Medial</span>
+                <span>{medial_thickness ? `${medial_thickness.toFixed(2)} mm` : 'Not measured'}</span>
+              </div>
+              <div className="analysis-measure-row">
+                <span>Lateral</span>
+                <span>{lateral_thickness ? `${lateral_thickness.toFixed(2)} mm` : 'Not measured'}</span>
+              </div>
+              <div className="analysis-measure-row">
+                <span>Mean</span>
+                <span>{mean_thickness ? `${mean_thickness.toFixed(2)} mm` : 'Not measured'}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* RIGHT COLUMN: COMPARISONS */}
         <div className="analysis-col-right">
-          <Card className="ui-card analysis-results-card">
-            <h3 className="ui-card-title">POPULATION COMPARISON</h3>
+          <div className="analysis-section">
+            <h3 className="analysis-section-title">Population Comparison</h3>
             
-            <div className="analysis-section mt-4">
-              <h4 className="analysis-section-title">OA vs Non-OA (Male)</h4>
-              <p className="text-muted text-sm mb-3">Comparing meniscus thickness against male population averages.</p>
-              
-              <div className="analysis-chart-mock">
-                {/* Minimal CSS Bar Chart Mock */}
-                <div className="chart-bar-group">
-                  <div className="chart-label">Non-OA Avg</div>
-                  <div className="chart-track">
-                    <div className="chart-fill bg-secondary" style={{ width: '85%' }}></div>
-                    <div className="chart-val">5.8 mm</div>
-                  </div>
-                </div>
-                <div className="chart-bar-group">
-                  <div className="chart-label">OA Avg</div>
-                  <div className="chart-track">
-                    <div className="chart-fill bg-warning" style={{ width: '55%' }}></div>
-                    <div className="chart-val">3.4 mm</div>
-                  </div>
-                </div>
-                <div className="chart-bar-group highlight-group">
-                  <div className="chart-label">Patient</div>
-                  <div className="chart-track">
-                    <div className="chart-fill bg-primary" style={{ width: `${Math.min(((meniscusMeasurement?.mean_thickness_mm || 0) / 6.5) * 100, 100)}%` }}></div>
-                    <div className="chart-val">{meniscusMeasurement?.mean_thickness_mm?.toFixed(2) || '?'} mm</div>
-                  </div>
-                </div>
+            {isSynthetic && (
+              <div className="analysis-prototype-warning">
+                <strong>RESEARCH PROTOTYPE</strong>
+                <p>Synthetic reference dataset &mdash; not clinical evidence.</p>
               </div>
-            </div>
+            )}
 
-            <div className="analysis-section mt-6">
-              <h4 className="analysis-section-title">Age Association</h4>
-              <p className="text-muted text-sm mb-3">Thickness trend across age groups.</p>
-              <div className="analysis-chart-mock text-muted text-center p-4 border-dashed rounded">
-                [ Age Association Scatter Plot ]
-                <br/>
-                <span className="text-xs">Recharts integration placeholder</span>
-              </div>
+            <div className="analysis-comparison mt-6">
+              <p className="text-sm text-muted mb-4">Patient Meniscus Mean Thickness vs Reference Population</p>
+              
+              {mean_thickness ? (
+                <div className="comparison-visual">
+                  <div className="comparison-track">
+                    <span className="comp-label left">Lower</span>
+                    <div className="comp-line">
+                      <div className="comp-marker" style={{ left: '50%' }}>●</div>
+                      <div className="comp-marker-label" style={{ left: '50%' }}>
+                        Patient<br/>{mean_thickness.toFixed(2)}
+                      </div>
+                    </div>
+                    <span className="comp-label right">Upper</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-muted text-sm text-center">Patient measurement unavailable for comparison.</div>
+              )}
             </div>
-            
-          </Card>
+          </div>
         </div>
       </div>
     </div>

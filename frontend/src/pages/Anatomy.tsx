@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { MedicalImageViewer } from '../components/MedicalImageViewer';
-import { Layers, Activity, Search, ZoomIn, Maximize, Target, MousePointer2 } from 'lucide-react';
 import './Anatomy.css';
 
 interface AnatomyProps {
@@ -13,7 +12,6 @@ interface AnatomyProps {
   onToggleMeasurements: (show: boolean) => void;
   showBoneMeasurements: boolean;
   onToggleBoneMeasurements: (show: boolean) => void;
-  isDemo?: boolean;
 }
 
 export const Anatomy: React.FC<AnatomyProps> = ({
@@ -25,26 +23,16 @@ export const Anatomy: React.FC<AnatomyProps> = ({
   showMeasurements,
   onToggleMeasurements,
   showBoneMeasurements,
-  onToggleBoneMeasurements,
-  isDemo
+  onToggleBoneMeasurements
 }) => {
   const [activeTool, setActiveTool] = useState('pan');
-
-  const tools = [
-    { id: 'select', icon: <MousePointer2 size={16} />, label: 'Select' },
-    { id: 'pan', icon: <Maximize size={16} />, label: 'Pan' },
-    { id: 'zoom', icon: <ZoomIn size={16} />, label: 'Zoom' },
-    { id: 'window', icon: <Target size={16} />, label: 'Window' }
-  ];
 
   return (
     <div className="ana-workstation">
       {/* LEFT SIDEBAR - LAYERS & TOOLS */}
       <div className="ana-sidebar ana-sidebar-left">
         <div className="ana-panel">
-          <div className="ana-panel-header">
-            <Layers size={14} /> LAYERS
-          </div>
+          <div className="ana-panel-header">LAYERS</div>
           <div className="ana-layer-list">
             <label className="ana-layer-item">
               <input type="checkbox" checked={true} readOnly />
@@ -58,25 +46,19 @@ export const Anatomy: React.FC<AnatomyProps> = ({
                   onChange={() => onToggleOverlay(overlay.id)}
                 />
                 <span style={{ color: overlay.color }}>{overlay.name}</span>
+                <span className="ana-layer-status">Detected</span>
               </label>
             ))}
           </div>
         </div>
 
         <div className="ana-panel">
-          <div className="ana-panel-header">
-            <Search size={14} /> TOOLS
-          </div>
+          <div className="ana-panel-header">TOOLS</div>
           <div className="ana-tool-list">
-            {tools.map(t => (
-              <button 
-                key={t.id} 
-                className={`ana-tool-btn ${activeTool === t.id ? 'active' : ''}`}
-                onClick={() => setActiveTool(t.id)}
-              >
-                {t.icon} {t.label}
-              </button>
-            ))}
+            <button className={`ana-tool-btn ${activeTool === 'select' ? 'active' : ''}`} disabled title="Coming soon">Select (Coming soon)</button>
+            <button className={`ana-tool-btn ${activeTool === 'pan' ? 'active' : ''}`} onClick={() => setActiveTool('pan')} disabled title="Coming soon">Pan (Coming soon)</button>
+            <button className={`ana-tool-btn ${activeTool === 'zoom' ? 'active' : ''}`} onClick={() => setActiveTool('zoom')} disabled title="Coming soon">Zoom (Coming soon)</button>
+            <button className={`ana-tool-btn ${activeTool === 'window' ? 'active' : ''}`} disabled title="Coming soon">Window/Level (Coming soon)</button>
           </div>
         </div>
       </div>
@@ -92,7 +74,7 @@ export const Anatomy: React.FC<AnatomyProps> = ({
           />
         ) : (
           <div className="ana-empty">
-            <p>No image available for anatomy workspace.</p>
+            <p>No image available.</p>
           </div>
         )}
       </div>
@@ -100,24 +82,22 @@ export const Anatomy: React.FC<AnatomyProps> = ({
       {/* RIGHT SIDEBAR - FINDINGS */}
       <div className="ana-sidebar ana-sidebar-right">
         <div className="ana-panel">
-          <div className="ana-panel-header">
-            <Activity size={14} /> FINDINGS
-          </div>
+          <div className="ana-panel-header">FINDINGS</div>
           
           <div className="ana-findings-list">
-            {overlays.map(o => (
+            {overlays.length > 0 ? overlays.map(o => (
               <div key={o.id} className="ana-finding-item">
                 <span className="ana-finding-name">{o.name}</span>
                 <span className="ana-finding-status">Detected</span>
               </div>
-            ))}
+            )) : (
+              <div className="ana-empty-text">No findings available</div>
+            )}
           </div>
         </div>
 
         <div className="ana-panel">
-          <div className="ana-panel-header">
-            MEASUREMENTS
-          </div>
+          <div className="ana-panel-header">MEASUREMENTS</div>
           
           <div className="ana-measure-controls">
             <label className="ana-layer-item">
@@ -139,22 +119,25 @@ export const Anatomy: React.FC<AnatomyProps> = ({
           </div>
 
           <div className="ana-measure-summary">
-            {boneMeasurement?.femur_width_mm && (
-              <div className="ana-summary-item">
-                <div className="ana-summary-label">Femur Width</div>
-                <div className="ana-summary-val">{boneMeasurement.femur_width_mm.toFixed(1)} mm</div>
-              </div>
-            )}
-            {boneMeasurement?.tibia_width_mm && (
-              <div className="ana-summary-item">
-                <div className="ana-summary-label">Tibia Width</div>
-                <div className="ana-summary-val">{boneMeasurement.tibia_width_mm.toFixed(1)} mm</div>
-              </div>
-            )}
+            <div className="ana-summary-item">
+              <div className="ana-summary-label">Femur Width</div>
+              <div className="ana-summary-val">{boneMeasurement?.femur?.width_mm ? `${boneMeasurement.femur.width_mm.toFixed(1)} mm` : 'Not measured'}</div>
+            </div>
+            <div className="ana-summary-item">
+              <div className="ana-summary-label">Femur AP</div>
+              <div className="ana-summary-val">{boneMeasurement?.femur?.ap_dimension_mm ? `${boneMeasurement.femur.ap_dimension_mm.toFixed(1)} mm` : 'Not measured'}</div>
+            </div>
+            <div className="ana-summary-item">
+              <div className="ana-summary-label">Tibia Width</div>
+              <div className="ana-summary-val">{boneMeasurement?.tibia?.width_mm ? `${boneMeasurement.tibia.width_mm.toFixed(1)} mm` : 'Not measured'}</div>
+            </div>
+            <div className="ana-summary-item">
+              <div className="ana-summary-label">Tibia AP</div>
+              <div className="ana-summary-val">{boneMeasurement?.tibia?.ap_dimension_mm ? `${boneMeasurement.tibia.ap_dimension_mm.toFixed(1)} mm` : 'Not measured'}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
-

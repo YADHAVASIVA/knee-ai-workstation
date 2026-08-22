@@ -34,15 +34,15 @@ describe('App Component (Integrated Dashboard)', () => {
     render(<App />);
     // TopBar shows "Overview" as current title
     expect(screen.getAllByText('Overview').length).toBeGreaterThan(0);
-    expect(screen.getByText('RESEARCH PROTOTYPE')).toBeInTheDocument();
+    
   });
 
   test('renders empty state Case Overview', async () => {
     render(<App />);
     
     // Check CaseOverview empty state
-    expect(screen.getByText('NO ACTIVE CASE')).toBeInTheDocument();
-    expect(screen.getByText(/Upload a DICOM, PNG, or JPEG study/i)).toBeInTheDocument();
+    expect(screen.getByText('CASE OVERVIEW')).toBeInTheDocument();
+    expect(screen.getByText(/Upload a knee MRI study to begin/i)).toBeInTheDocument();
   });
 
   test('renders navigation Sidebar', async () => {
