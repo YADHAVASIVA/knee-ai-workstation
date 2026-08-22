@@ -4,6 +4,7 @@ import { AlertTriangle } from 'lucide-react';
 import './Analysis.css';
 
 interface AnalysisProps {
+  modality?: string;
   boneMeasurement: any;
   meniscusMeasurement: any;
   onAnalyze: () => void;

@@ -47,6 +47,14 @@ def test_measurement_pipeline():
     image_id = upload_resp.json()["image_id"]
     
     client.post(f"/api/v1/images/preprocess/{image_id}")
+    import os, json
+    from app.core.config import settings
+    meta_path = os.path.join(settings.UPLOAD_DIR, f"{image_id}_meta.json")
+    with open(meta_path, "r") as f:
+        meta = json.load(f)
+    meta["modality"] = "MRI"
+    with open(meta_path, "w") as f:
+        json.dump(meta, f)
     client.post(f"/api/v1/segmentation/{image_id}")
     
     # 2. Run Measurement
@@ -70,6 +78,14 @@ def test_measurement_missing_segmentation():
     upload_resp = client.post("/api/v1/images/upload", files={"file": ("test.png", img_data, "image/png")})
     image_id = upload_resp.json()["image_id"]
     client.post(f"/api/v1/images/preprocess/{image_id}")
+    import os, json
+    from app.core.config import settings
+    meta_path = os.path.join(settings.UPLOAD_DIR, f"{image_id}_meta.json")
+    with open(meta_path, "r") as f:
+        meta = json.load(f)
+    meta["modality"] = "MRI"
+    with open(meta_path, "w") as f:
+        json.dump(meta, f)
     
     measure_resp = client.post(f"/api/v1/measurements/meniscus/{image_id}")
     assert measure_resp.status_code == 404

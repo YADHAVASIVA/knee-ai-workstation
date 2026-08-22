@@ -1,0 +1,1 @@
+{"image_id":"d41f3517-0cb3-483e-b9f0-e8dc0d370ab5","model_status":"demo","model_name":"Image-Adaptive Research Prototype","model_version":"2.0-adaptive","clinical_validation":false,"structures":{"femur":{"detected":true,"confidence":null},"tibia":{"detected":true,"confidence":null},"medial_meniscus":{"detected":false,"confidence":null}}}

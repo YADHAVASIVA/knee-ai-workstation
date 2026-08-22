@@ -19,6 +19,14 @@ class SegmentationService:
         self.model.load()
 
     def run_segmentation(self, image_id: str) -> SegmentationResult:
+        import json
+        meta_path = os.path.join(settings.UPLOAD_DIR, f"{image_id}_meta.json")
+        modality = "UNKNOWN"
+        if os.path.exists(meta_path):
+            with open(meta_path, "r") as f:
+                meta = json.load(f)
+                modality = meta.get("modality", "UNKNOWN")
+                
         processed_path = os.path.join(settings.PROCESSED_DIR, f"{image_id}.png")
         if not os.path.exists(processed_path):
             raise HTTPException(status_code=404, detail="Processed image not found for segmentation.")
@@ -31,7 +39,7 @@ class SegmentationService:
             start_time = time.time()
             
             # 2. Model Inference
-            mask_array = self.model.predict(img_array)
+            mask_array = self.model.predict(img_array, modality)
             
             # 3. Basic Quality Checks
             if mask_array.shape[:2] != img_array.shape[:2]:
@@ -56,7 +64,7 @@ class SegmentationService:
                     confidence=None
                 ),
                 "medial_meniscus": StructureResult(
-                    detected=SegmentationClass.MEDIAL_MENISCUS in unique_labels,
+                    detected=SegmentationClass.MEDIAL_MENISCUS in unique_labels if modality == "MRI" else False,
                     confidence=None
                 )
             }

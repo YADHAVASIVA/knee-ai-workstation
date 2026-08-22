@@ -188,6 +188,7 @@ function App() {
             onToggleMeasurements={setShowMeniscusLines}
             showBoneMeasurements={showBoneLines}
             onToggleBoneMeasurements={setShowBoneLines}
+            modality={imageMetadata?.modality || 'UNKNOWN'}
           />
         );
       case 'analysis':
@@ -197,6 +198,7 @@ function App() {
             meniscusMeasurement={meniscusMeasurement}
             onAnalyze={handleRunOAAnalysis}
             isProcessing={workflowState === WorkflowState.OA_ANALYSIS_COMPLETE && !oaResult}
+            modality={imageMetadata?.modality || 'UNKNOWN'}
           />
         );
       case 'planning':
@@ -217,6 +219,7 @@ function App() {
             boneMeasurement={boneMeasurement}
             meniscusMeasurement={meniscusMeasurement}
             matchingResult={matchingResult}
+            modality={imageMetadata?.modality || 'UNKNOWN'}
           />
         );
       default:

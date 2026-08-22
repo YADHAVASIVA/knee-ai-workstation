@@ -4,6 +4,7 @@ import { MousePointer2, Move, ZoomIn, SlidersHorizontal, Eye, EyeOff } from 'luc
 import './Anatomy.css';
 
 interface AnatomyProps {
+  modality?: string;
   previewUrl: string | null;
   overlays: any[];
   measurements: any[];

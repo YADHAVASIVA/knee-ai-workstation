@@ -21,6 +21,14 @@ def test_oa_analysis_pipeline():
     image_id = upload_resp.json()["image_id"]
     
     client.post(f"/api/v1/images/preprocess/{image_id}")
+    import os, json
+    from app.core.config import settings
+    meta_path = os.path.join(settings.UPLOAD_DIR, f"{image_id}_meta.json")
+    with open(meta_path, "r") as f:
+        meta = json.load(f)
+    meta["modality"] = "MRI"
+    with open(meta_path, "w") as f:
+        json.dump(meta, f)
     client.post(f"/api/v1/segmentation/{image_id}")
     
     # We must call measurement internally, or just verify the OA analysis calls it

@@ -1,18 +1,21 @@
 ﻿import os
+import re
 
 def fix_file(filepath, replacements):
+    if not os.path.exists(filepath): return
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
     for old, new in replacements:
-        content = content.replace(old, new)
+        if isinstance(old, re.Pattern):
+            content = old.sub(new, content)
+        else:
+            content = content.replace(old, new)
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
 
-fix_file('frontend/src/pages/CaseOverview.test.tsx', [
-    ("expect(screen.getByText('Review the uploaded study and analysis results.')).toBeInTheDocument();", ""),
-    ("/Open Anatomy Workspace/i", "/Review Anatomy/i")
+fix_file('backend/tests/test_measurements.py', [
+    (re.compile(r"import json\n    from app\.core\.config"), "import os, json\n    from app.core.config")
 ])
-
-fix_file('frontend/src/pages/Analysis.test.tsx', [
-    ("expect(screen.getByText('OSTEOARTHRITIS-ASSOCIATED ANALYSIS')).toBeInTheDocument();", "expect(screen.getByText('OA-ASSOCIATED ANALYSIS')).toBeInTheDocument();")
+fix_file('backend/tests/test_oa_analysis.py', [
+    (re.compile(r"import json\n    from app\.core\.config"), "import os, json\n    from app.core.config")
 ])

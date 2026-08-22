@@ -3,6 +3,7 @@ import { Button } from '../components/ui/Button';
 import './Report.css';
 
 interface ReportProps {
+  modality?: string;
   analysisId: string | null;
   imageMetadata: any;
   boneMeasurement: any;
