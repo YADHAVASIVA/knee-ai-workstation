@@ -2,87 +2,40 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
+  /* CLINICAL WORKSPACE (LIGHT) */
+  --light-bg: #F5F7F9;
+  --light-surface: #FFFFFF;
+  --light-border: #E8EEF2;
+  --light-text: #1C2329;
+  --light-text-secondary: #576573;
+  --light-text-muted: #8696A7;
+
+  /* IMAGING WORKSTATION (DARK) */
+  --dark-bg: #050709;
+  --dark-surface: #0B0F12;
+  --dark-border: #182026;
+  --dark-text: #F0F4F8;
+  --dark-text-secondary: #99A8B6;
+  
+  /* SHELL (DARK) */
+  --shell-bg: #030406;
+  --shell-border: #131A20;
+  --shell-text: #D5DFE8;
+  
   /* BRAND COLORS */
   --color-primary: #0F766E;
   --color-primary-hover: #115E59;
-  --color-primary-active: #134E4A;
-  --color-primary-light: rgba(15, 118, 110, 0.08);
-
-  /* SEMANTIC STATUS COLORS */
-  --color-success: #16A34A;
-  --color-warning: #D97706;
-  --color-danger: #DC2626;
-  --color-demo: #7C3AED;
-  --color-info: #2563EB;
-
-  /* SHELL & NAVIGATION (CHROME) */
-  --shell-bg: #111827;
-  --sidebar-bg: #182231;
-  --topbar-bg: #182231;
-  --shell-border: #202B38;
-  --shell-text: #F3F4F6;
-  --shell-text-muted: #9CA3AF;
-  --sidebar-active-bg: rgba(15, 118, 110, 0.12);
-  --sidebar-active-border: #0F766E;
-
-  /* CLINICAL WORKSPACE (LIGHT) */
-  --light-bg: #F6F8FA;
-  --light-surface: #FFFFFF;
-  --light-border: #E8EDF2;
-  --light-border-strong: #D1D5DB;
-  --light-text: #111827;
-  --light-text-secondary: #4B5563;
-  --light-text-muted: #9CA3AF;
-
-  /* IMAGING WORKSTATION (DARK) */
-  --dark-bg: #080B0F;
-  --dark-surface: #0D1117;
-  --dark-toolbar: #0D1117;
-  --dark-viewer: #030508;
-  --dark-border: #151A21;
-  --dark-border-strong: #30363D;
-  --dark-text: #F3F4F6;
-  --dark-text-secondary: #8B949E;
-
-  /* STRICT SPACING RHYTHM */
+  
+  /* TYPOGRAPHY */
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  /* SPACING - 8px Grid */
   --space-4: 4px;
   --space-8: 8px;
-  --space-12: 12px;
   --space-16: 16px;
   --space-24: 24px;
   --space-32: 32px;
-  --space-40: 40px;
   --space-48: 48px;
   --space-64: 64px;
-
-  /* RADIUS */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
-  --radius-xl: 16px;
-  
-  /* TYPOGRAPHY */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
-
-  /* TYPE SCALES */
-  --font-size-xs: 11px;
-  --font-size-sm: 13px;
-  --font-size-md: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 20px;
-  --font-size-2xl: 24px;
-  --font-size-hero: 28px;
-
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-
-  /* SHADOWS */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-none: none;
-  
-  /* TRANSITIONS */
-  --transition-fast: 150ms ease;
 }

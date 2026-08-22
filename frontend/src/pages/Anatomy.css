@@ -1,63 +1,41 @@
 .ana-workstation {
   display: flex;
-  width: 100%;
   height: 100%;
+  width: 100%;
   background-color: var(--dark-bg);
-  overflow: hidden;
+  color: var(--dark-text);
 }
 
 .ana-sidebar {
-  width: 260px;
+  width: 280px;
   background-color: var(--dark-surface);
-  border-left: 1px solid var(--dark-border);
   border-right: 1px solid var(--dark-border);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  z-index: 2;
-}
-
-.ana-sidebar-left {
-  border-left: none;
+  overflow-y: auto;
 }
 
 .ana-sidebar-right {
   border-right: none;
-}
-
-.ana-viewer-container {
-  flex: 1;
-  position: relative;
-  background-color: var(--dark-viewer);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.ana-empty {
-  color: var(--dark-text-secondary);
-  font-size: var(--font-size-sm);
+  border-left: 1px solid var(--dark-border);
 }
 
 .ana-panel {
-  padding: var(--space-16);
   border-bottom: 1px solid var(--dark-border);
 }
 
 .ana-panel-header {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+  padding: var(--space-16);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   color: var(--dark-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: var(--space-16);
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
 }
 
-.ana-layer-list {
+.ana-layer-list, .ana-measure-controls, .ana-measure-summary {
+  padding: 0 var(--space-16) var(--space-16);
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
@@ -67,93 +45,94 @@
   display: flex;
   align-items: center;
   gap: var(--space-8);
-  font-size: var(--font-size-sm);
+  font-size: 13px;
   color: var(--dark-text);
   cursor: pointer;
 }
 
+.ana-layer-status {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--dark-text-secondary);
+}
+
 .ana-tool-list {
+  padding: 0 var(--space-16) var(--space-16);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
 .ana-tool-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  width: 100%;
   background: transparent;
-  border: none;
-  color: var(--dark-text-secondary);
+  border: 1px solid var(--dark-border);
+  color: var(--dark-text);
   padding: var(--space-8);
-  border-radius: var(--radius-sm);
+  font-size: 12px;
+  text-align: left;
   cursor: pointer;
-  font-family: var(--font-sans);
-  font-size: var(--font-size-sm);
-  transition: all var(--transition-fast);
 }
 
-.ana-tool-btn:hover {
-  background: rgba(255,255,255,0.05);
-  color: var(--dark-text);
+.ana-tool-btn:hover:not(:disabled) {
+  background-color: rgba(255,255,255,0.05);
 }
 
 .ana-tool-btn.active {
-  background: rgba(15, 118, 110, 0.2);
-  color: var(--color-primary);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #FFF;
+}
+
+.ana-tool-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.ana-viewer-container {
+  flex: 1;
+  position: relative;
+  background-color: var(--dark-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.ana-empty {
+  color: var(--dark-text-secondary);
+  font-size: 14px;
 }
 
 .ana-findings-list {
+  padding: 0 var(--space-16) var(--space-16);
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
+  gap: var(--space-8);
 }
 
 .ana-finding-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: var(--font-size-sm);
-}
-
-.ana-finding-name {
-  color: var(--dark-text);
+  font-size: 13px;
+  padding: var(--space-8);
+  background-color: rgba(255,255,255,0.02);
+  border: 1px solid var(--dark-border);
 }
 
 .ana-finding-status {
-  color: var(--color-success);
-  font-size: var(--font-size-xs);
-}
-
-.ana-measure-controls {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-  margin-bottom: var(--space-16);
-  padding-bottom: var(--space-16);
-  border-bottom: 1px solid var(--dark-border);
-}
-
-.ana-measure-summary {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
+  color: #10B981;
+  font-size: 11px;
+  text-transform: uppercase;
 }
 
 .ana-summary-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  font-size: 13px;
+  padding: var(--space-4) 0;
+  border-bottom: 1px dashed var(--dark-border);
 }
 
 .ana-summary-label {
-  font-size: var(--font-size-sm);
   color: var(--dark-text-secondary);
-}
-
-.ana-summary-val {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
-  color: var(--dark-text);
 }

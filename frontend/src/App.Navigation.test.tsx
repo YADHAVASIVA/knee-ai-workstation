@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import App from './App';
 
 vi.mock('./services/api');
@@ -24,3 +24,4 @@ describe('App Navigation and State Architecture', () => {
     // In actual app, workflowState unlocks routes. 
   });
 });
+
