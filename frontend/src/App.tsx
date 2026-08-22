@@ -36,7 +36,7 @@ function App() {
 
   const workflow = useAnalysisWorkflow();
   const { 
-    analysisId, workflowState, setWorkflowState, setErrorMsg, 
+    analysisId, setAnalysisId, workflowState, setWorkflowState, setErrorMsg, 
     setUploadData, setPreprocessData,
     segmentationResult, setSegmentationResult, meniscusMeasurement, setMeniscusMeasurement,
     boneMeasurement, setBoneMeasurement, oaResult, setOaResult,
@@ -75,6 +75,7 @@ function App() {
       
       const uploadRes = await uploadImage(file);
       setUploadData(uploadRes);
+      setAnalysisId(uploadRes.image_id);
       
       setWorkflowState(WorkflowState.PREPROCESSING);
       const preRes = await preprocessImage(uploadRes.image_id);

@@ -59,6 +59,7 @@ export const useAnalysisWorkflow = () => {
 
   return {
     analysisId,
+    setAnalysisId,
     workflowState,
     setWorkflowState,
     errorMsg,
