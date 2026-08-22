@@ -76,6 +76,7 @@ export const Anatomy: React.FC<AnatomyProps> = ({
             overlays={overlays}
             measurements={showMeasurements ? measurements : []}
             boneResult={showBoneMeasurements ? boneMeasurement : null}
+            activeTool={activeTool}
           />
         ) : (
           <div className="ana-empty">

@@ -22,6 +22,7 @@ interface MedicalImageViewerProps {
   onToggleMeasurements?: (show: boolean) => void;
   showBoneMeasurements?: boolean;
   onToggleBoneMeasurements?: (show: boolean) => void;
+  activeTool?: string;
 }
 
 export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({ 
@@ -31,6 +32,7 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
   boneResult,
   showMeasurements = true,
   showBoneMeasurements = true,
+  activeTool = 'pan',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -39,6 +41,8 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [opacity, setOpacity] = useState(0.7);
+  const [brightness, setBrightness] = useState(1);
+  const [contrast, setContrast] = useState(1);
 
   // Wheel zoom
   const handleWheel = (e: React.WheelEvent) => {
@@ -59,7 +63,18 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
     if (!isDragging) return;
     const dx = e.clientX - lastPos.x;
     const dy = e.clientY - lastPos.y;
-    setPan(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+    
+    if (activeTool === 'pan') {
+      setPan(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+    } else if (activeTool === 'zoom') {
+      const zoomSensitivity = 0.01;
+      setScale(prev => Math.min(Math.max(prev - dy * zoomSensitivity, 0.25), 4));
+    } else if (activeTool === 'window') {
+      const sensitivity = 0.005;
+      setContrast(prev => Math.max(prev + dx * sensitivity, 0.1));
+      setBrightness(prev => Math.max(prev - dy * sensitivity, 0.1));
+    }
+    
     setLastPos({ x: e.clientX, y: e.clientY });
   };
 
@@ -73,6 +88,8 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
   const handleReset = () => {
     setScale(1);
     setPan({ x: 0, y: 0 });
+    setBrightness(1);
+    setContrast(1);
   };
 
   const toggleFullscreen = () => {
@@ -132,7 +149,7 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`
             }}
           >
-            <img src={imageUrl} alt="Medical Image" className="miv-base-image" draggable={false} />
+            <img src={imageUrl} alt="Medical Image" className="miv-base-image" draggable={false} style={{ filter: `brightness(${brightness}) contrast(${contrast})` }} />
             
             {overlays.map(overlay => (
               <img
@@ -140,7 +157,7 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
                 src={overlay.url}
                 alt={overlay.name}
                 className={`miv-overlay-image ${overlay.visible ? 'visible' : 'hidden'}`}
-                style={{ opacity: opacity }}
+                style={{ opacity: opacity, filter: `brightness(${brightness}) contrast(${contrast})` }}
                 draggable={false}
               />
             ))}
