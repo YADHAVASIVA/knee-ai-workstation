@@ -13,7 +13,7 @@ describe('CaseOverview Component', () => {
   };
 
   it('renders patient intake form', () => {
-    render(<CaseOverview patient={mockPatient} onChange={vi.fn()} onNext={vi.fn()} />);
+    render(<CaseOverview patient={mockPatient} caseId='TEST-123' onChange={vi.fn()} onNext={vi.fn()} />);
     expect(screen.getByText('Case Overview')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Test')).toBeInTheDocument();
   });

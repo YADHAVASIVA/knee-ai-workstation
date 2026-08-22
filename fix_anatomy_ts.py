@@ -9,6 +9,6 @@ def fix_file(filepath, replacements):
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
 
-fix_file('frontend/src/pages/CaseOverview.test.tsx', [
-    ("<CaseOverview patient={mockPatient} onChange={vi.fn()} onNext={vi.fn()} />", "<CaseOverview patient={mockPatient} caseId='TEST-123' onChange={vi.fn()} onNext={vi.fn()} />")
+fix_file('frontend/src/pages/Anatomy.tsx', [
+    ("Maximize", "")
 ])

@@ -1,7 +1,7 @@
 ﻿import React, { useState } from 'react';
 import type { CaseImage } from '../types/case';
 import { MedicalImageViewer } from '../components/MedicalImageViewer';
-import { Eye, EyeOff, MousePointer2, Move, ZoomIn, Contrast } from 'lucide-react';
+import { Eye, EyeOff, MousePointer2, Move, ZoomIn, Contrast, RefreshCcw,  } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import './Anatomy.css';
 
@@ -65,13 +65,13 @@ export const Anatomy: React.FC<AnatomyProps> = ({ images, activeImageId, setActi
 
     const overlays = [];
     if (activeImage.segmentation?.structures.femur?.detected) {
-      overlays.push({ id: 'femur', url: getMaskUrl(activeImage.id, 'femur'), visible: true, name: 'Femur', color: '#3b82f6' });
+      overlays.push({ id: 'femur', url: getMaskUrl(activeImage.id, 'femur'), visible: true, name: 'Femur', color: 'var(--color-primary)' });
     }
     if (activeImage.segmentation?.structures.tibia?.detected) {
-      overlays.push({ id: 'tibia', url: getMaskUrl(activeImage.id, 'tibia'), visible: true, name: 'Tibia', color: '#10b981' });
+      overlays.push({ id: 'tibia', url: getMaskUrl(activeImage.id, 'tibia'), visible: true, name: 'Tibia', color: 'var(--color-primary)' });
     }
     if (activeImage.metadata?.modality === 'MRI' && activeImage.segmentation?.structures.medial_meniscus?.detected) {
-      overlays.push({ id: 'meniscus', url: getMaskUrl(activeImage.id, 'medial_meniscus'), visible: true, name: 'Meniscus', color: '#f59e0b' });
+      overlays.push({ id: 'meniscus', url: getMaskUrl(activeImage.id, 'medial_meniscus'), visible: true, name: 'Meniscus', color: 'var(--color-primary)' });
     }
 
     const mList = activeImage.measurements.meniscus?.locations || [];
@@ -85,6 +85,8 @@ export const Anatomy: React.FC<AnatomyProps> = ({ images, activeImageId, setActi
             <button className={`ana-tool-btn ${activeTool === 'pan' ? 'active' : ''}`} onClick={() => setActiveTool('pan')} title="Pan"><Move size={18} /></button>
             <button className={`ana-tool-btn ${activeTool === 'zoom' ? 'active' : ''}`} onClick={() => setActiveTool('zoom')} title="Zoom"><ZoomIn size={18} /></button>
             <button className={`ana-tool-btn ${activeTool === 'window' ? 'active' : ''}`} onClick={() => setActiveTool('window')} title="Window/Level"><Contrast size={18} /></button>
+            <div style={{width: '1px', background: 'rgba(255,255,255,0.2)', margin: '0 4px'}}></div>
+            <button className="ana-tool-btn" onClick={() => { setActiveTool('reset_trigger'); setTimeout(() => setActiveTool('select'), 50); }} title="Reset"><RefreshCcw size={18} /></button>
           </div>
         </div>
         <div className="ana-viewer-container">
@@ -137,14 +139,14 @@ export const Anatomy: React.FC<AnatomyProps> = ({ images, activeImageId, setActi
         <div className="ana-layer-list">
           <div className="ana-layer-item" onClick={() => setShowBoneMeasurements(!showBoneMeasurements)}>
             <button className="ana-layer-toggle">
-              {showBoneMeasurements ? <Eye size={16} className="text-success" /> : <EyeOff size={16} className="text-muted" />}
+              {showBoneMeasurements ? <Eye size={16} style={{color: 'var(--color-success)'}} /> : <EyeOff size={16} style={{color: 'var(--color-text-muted)'}} />}
             </button>
             <span>Bone Measurements</span>
           </div>
           {modality === 'MRI' && (
             <div className="ana-layer-item" onClick={() => setShowMeasurements(!showMeasurements)}>
               <button className="ana-layer-toggle">
-                {showMeasurements ? <Eye size={16} className="text-success" /> : <EyeOff size={16} className="text-muted" />}
+                {showMeasurements ? <Eye size={16} style={{color: 'var(--color-success)'}} /> : <EyeOff size={16} style={{color: 'var(--color-text-muted)'}} />}
               </button>
               <span>Meniscus Measurements</span>
             </div>

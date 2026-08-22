@@ -1,62 +1,61 @@
-import React from 'react';
-import { ChevronRight, Settings, User } from 'lucide-react';
+﻿import React from 'react';
+import { Settings, User, CheckCircle2 } from 'lucide-react';
 import './shell.css';
 
 interface TopBarProps {
   activeRoute: string;
   analysisId: string | null;
+  patientName?: string;
   isDemo: boolean;
   isCalibrated: boolean | null;
-  imageMetadata?: any;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ 
   activeRoute, 
   analysisId,
-  isDemo,
-  isCalibrated,
-  imageMetadata
+  patientName,
+  isDemo, 
+  isCalibrated 
 }) => {
-  const getContextName = () => {
-    switch(activeRoute) {
-      case 'overview': return 'Overview';
-      case 'anatomy': return 'Anatomy';
-      case 'analysis': return 'OA Analysis';
-      case 'planning': return 'Implant Planning';
-      case 'report': return 'Report';
-      default: return '';
-    }
-  };
-
   return (
-    <header className="app-topbar">
+    <header className="topbar">
       <div className="topbar-left">
-        <span className="topbar-brand">KNEE AI</span>
-        <ChevronRight size={16} className="breadcrumb-slash" />
-        <span className="topbar-route">{getContextName()}</span>
-      </div>
-      
-      <div className="topbar-right">
-        {analysisId && (
-          <>
-            <span className="topbar-meta mono">{analysisId.split('-')[0].toUpperCase()}</span>
-            <span className="topbar-divider"></span>
-            <span className="topbar-meta">{imageMetadata?.modality || 'MRI'}</span>
-            <span className="topbar-divider"></span>
-            <span className={`topbar-meta ${isCalibrated ? 'calibrated' : ''}`}>
-              &bull; {isCalibrated ? 'Calibrated' : 'Uncalibrated'}
-            </span>
-          </>
-        )}
-        {isDemo && (
+        <h2 className="topbar-case-id">{analysisId || 'NEW CASE'}</h2>
+        {patientName && (
           <>
             <span className="topbar-divider"></span>
-            <span className="topbar-demo-badge">RESEARCH PROTOTYPE</span>
+            <span className="topbar-patient-name">{patientName}</span>
           </>
         )}
         <span className="topbar-divider"></span>
-        <button className="topbar-icon-btn"><Settings size={18} /></button>
-        <button className="topbar-icon-btn"><User size={18} /></button>
+        <span className="topbar-route-name">{activeRoute.toUpperCase()}</span>
+      </div>
+
+      <div className="topbar-right">
+        {isCalibrated != null && (
+          <>
+            {isCalibrated ? (
+              <span className="topbar-meta calibrated"><CheckCircle2 size={14}/> CALIBRATED</span>
+            ) : (
+              <span className="topbar-meta uncalibrated">UNCALIBRATED</span>
+            )}
+            <span className="topbar-divider"></span>
+          </>
+        )}
+        
+        {isDemo && (
+          <>
+            <span className="topbar-demo-badge">RESEARCH PROTOTYPE</span>
+            <span className="topbar-divider"></span>
+          </>
+        )}
+        
+        <button className="topbar-icon-btn">
+          <Settings size={18} />
+        </button>
+        <button className="topbar-icon-btn">
+          <User size={18} />
+        </button>
       </div>
     </header>
   );

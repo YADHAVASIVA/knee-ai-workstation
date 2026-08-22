@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Sidebar } from './components/shell/Sidebar';
 import { TopBar } from './components/shell/TopBar';
 import { CaseOverview } from './pages/CaseOverview';
@@ -12,6 +12,33 @@ import type { CaseState } from './types/case';
 import * as api from './services/api';
 
 export type AppRoute = 'overview' | 'imaging' | 'anatomy' | 'analysis' | 'planning' | 'report';
+
+
+const StepIndicator = ({ activeRoute }: { activeRoute: string }) => {
+  const steps = [
+    { id: 'overview', label: '01 Overview' },
+    { id: 'imaging', label: '02 Imaging' },
+    { id: 'anatomy', label: '03 Anatomy' },
+    { id: 'analysis', label: '04 Analysis' },
+    { id: 'planning', label: '05 Planning' },
+    { id: 'report', label: '06 Report' }
+  ];
+  
+  const activeIdx = steps.findIndex(s => s.id === activeRoute);
+  
+  return (
+    <div className="step-indicator">
+      {steps.map((s, idx) => (
+        <React.Fragment key={s.id}>
+          <span className={`step-item ${idx === activeIdx ? 'active' : idx < activeIdx ? 'completed' : 'locked'}`}>
+            {s.label}
+          </span>
+          {idx < steps.length - 1 && <span className="step-arrow">&rarr;</span>}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
 
 function App() {
   const [activeRoute, setActiveRoute] = useState<AppRoute>('overview');
@@ -100,11 +127,7 @@ function App() {
     switch (activeRoute) {
       case 'overview':
         return (
-          <CaseOverview 
-            patient={caseState.patient}
-            onChange={(p) => setCaseState(prev => ({ ...prev, patient: p }))}
-            onNext={() => setActiveRoute('imaging')}
-          />
+          <CaseOverview patient={caseState.patient} caseId={caseState.caseId} onChange={(p) => setCaseState(prev => ({ ...prev, patient: p }))} onNext={() => setActiveRoute('imaging')} />
         );
       case 'imaging':
         return (
@@ -168,8 +191,9 @@ function App() {
     <div className={`app-shell theme-${activeRoute === 'anatomy' ? 'dark' : 'light'}`}>
       <Sidebar activeRoute={activeRoute} analysisId={caseState.caseId} onNavigate={(route) => setActiveRoute(route as AppRoute)} routes={navItems as any} />
       <div className="main-content">
-        <TopBar activeRoute={activeRoute} analysisId={caseState.caseId} isDemo={true} isCalibrated={caseState.images.some(img => img.metadata?.pixel_spacing)} />
+        <TopBar activeRoute={activeRoute} analysisId={caseState.caseId} patientName={caseState.patient.name} isDemo={true} isCalibrated={caseState.images.length > 0 ? caseState.images.some(img => img.metadata?.pixel_spacing) : null} />
         <main className="page-container">
+          <StepIndicator activeRoute={activeRoute} />
           <ErrorBoundary>
             {renderPage()}
           </ErrorBoundary>

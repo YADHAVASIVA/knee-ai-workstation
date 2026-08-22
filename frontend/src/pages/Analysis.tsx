@@ -19,8 +19,8 @@ export const Analysis: React.FC<AnalysisProps> = ({ caseState, setCaseState, onB
     if (!targetImage) return;
 
     const oaRes = await api.analyzeOA(targetImage.id, {
-      age: parseInt(caseState.patient.age) || 45,
-      sex: caseState.patient.sex || 'Unknown',
+      age: parseInt(caseState.patient.age),
+      sex: caseState.patient.sex || 'Not provided',
       oa_status: 'Unknown'
     });
 
@@ -86,7 +86,11 @@ export const Analysis: React.FC<AnalysisProps> = ({ caseState, setCaseState, onB
             {!caseState.oaAnalysis ? (
               <div className="an-empty-state">
                 <p>Run analysis to detect potential OA indicators across studies.</p>
-                <Button onClick={handleRunOaAnalysis}>Run Case OA Analysis</Button>
+                {caseState.patient.age && caseState.patient.sex ? (
+                  <Button onClick={handleRunOaAnalysis}>Run Case OA Analysis</Button>
+                ) : (
+                  <div className="an-warning-box">Patient age and sex are required to run OA-associated analysis. Please update them in the Case Overview.</div>
+                )}
               </div>
             ) : (
               <div className="an-oa-results">

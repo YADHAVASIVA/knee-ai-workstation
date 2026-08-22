@@ -36,6 +36,14 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  React.useEffect(() => {
+    if (activeTool === 'reset_trigger') {
+      setScale(1);
+      setPan({ x: 0, y: 0 });
+      setBrightness(1);
+      setContrast(1);
+    }
+  }, [activeTool]);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
