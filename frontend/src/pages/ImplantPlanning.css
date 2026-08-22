@@ -1,0 +1,207 @@
+.planning-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.planning-empty {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.planning-header {
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--light-border);
+}
+
+.planning-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--light-text);
+  letter-spacing: -0.01em;
+}
+
+.planning-subtitle {
+  font-size: var(--font-size-md);
+  color: var(--light-text-secondary);
+  margin-top: var(--space-1);
+}
+
+.planning-workspace {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--space-5);
+}
+
+.planning-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.planning-col-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.planning-results-card {
+  flex: 1;
+}
+
+.planning-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--light-border);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.mb-0 { margin-bottom: 0 !important; }
+.border-0 { border-bottom: none !important; }
+.mt-5 { margin-top: var(--space-5); }
+
+.planning-measure-group {
+  margin-bottom: var(--space-3);
+}
+
+.planning-measure-title {
+  font-size: var(--font-size-xs);
+  color: var(--light-text-muted);
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.05em;
+}
+
+.planning-measure-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--light-border-strong);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.planning-measure-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.planning-measure-label {
+  font-size: var(--font-size-md);
+  color: var(--light-text-secondary);
+}
+
+.planning-measure-value {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-md);
+  color: var(--light-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.planning-no-match {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--color-warning);
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-4);
+}
+
+.planning-table-wrapper {
+  overflow-x: auto;
+}
+
+.planning-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.planning-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  color: var(--light-text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--light-border-strong);
+  font-weight: var(--font-weight-semibold);
+  background-color: #F8FAFC;
+}
+.planning-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--light-border);
+  vertical-align: middle;
+  background-color: var(--light-surface);
+  transition: background-color var(--transition-fast);
+}
+.planning-table tr:hover td {
+  background-color: #F1F5F9;
+}
+.planning-table tr:last-child td {
+  border-bottom: none;
+}
+
+.planning-table tr.top-match {
+  background-color: rgba(22, 124, 128, 0.05); /* very light teal */
+}
+
+.planning-table th.num-col,
+.planning-table td.num-col {
+  text-align: right;
+}
+
+.rank-col {
+  width: 60px;
+  font-family: var(--font-mono);
+  font-weight: var(--font-weight-semibold);
+  color: var(--light-text-muted);
+}
+
+.top-match .rank-col {
+  color: var(--color-primary);
+}
+
+.comp-name {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--light-text);
+}
+
+.comp-meta {
+  font-size: var(--font-size-xs);
+  color: var(--light-text-muted);
+}
+
+.comp-val {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--light-text);
+}
+
+.comp-diff {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--light-text-muted);
+}
+
+.comp-score {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-success);
+}
+
+@media (max-width: 1024px) {
+  .planning-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+

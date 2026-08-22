@@ -1,0 +1,46 @@
+.global-warnings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.demo-banner {
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+  padding: 12px 20px;
+  border-radius: 4px;
+}
+
+.demo-banner strong {
+  color: #b91c1c;
+  display: block;
+  font-size: 1.05em;
+  margin-bottom: 4px;
+}
+
+.demo-banner p {
+  color: #991b1b;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.warning-banner {
+  background-color: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  padding: 12px 20px;
+  border-radius: 4px;
+}
+
+.warning-banner strong {
+  color: #b45309;
+  display: block;
+  font-size: 1.05em;
+  margin-bottom: 4px;
+}
+
+.warning-banner p {
+  color: #92400e;
+  margin: 0;
+  font-size: 0.9em;
+}

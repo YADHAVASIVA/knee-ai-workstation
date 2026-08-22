@@ -1,0 +1,78 @@
+.upload-area {
+  border: 2px dashed #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 3rem 1rem;
+  text-align: center;
+  background-color: #f8fafc;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.upload-area.drag-active {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.upload-area.disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.upload-area input {
+  display: none;
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.primary-text {
+  font-weight: 600;
+  color: #334155;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.secondary-text {
+  color: #64748b;
+  margin: 0;
+}
+
+.upload-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.upload-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.supported-formats {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

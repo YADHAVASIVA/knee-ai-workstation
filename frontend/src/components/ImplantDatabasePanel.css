@@ -1,0 +1,78 @@
+.implant-database-panel {
+  margin-top: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.demo-warning {
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.demo-warning strong {
+  color: #b91c1c;
+  display: block;
+  font-size: 1.1em;
+}
+
+.demo-warning p {
+  color: #991b1b;
+  margin: 5px 0 0 0;
+  font-size: 0.9em;
+}
+
+.tables-container {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.table-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.table-section h3 {
+  margin-top: 0;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.implant-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.implant-table th,
+.implant-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.implant-table th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #475569;
+}
+
+.implant-table tr:hover {
+  background-color: #f1f5f9;
+}
+
+.demo-badge {
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.7em;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  font-weight: bold;
+}

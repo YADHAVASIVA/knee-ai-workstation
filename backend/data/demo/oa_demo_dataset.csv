@@ -1,0 +1,13 @@
+patient_id,age,sex,oa_status,meniscus_thickness_pixels,is_demo
+P001,45,Male,NON_OA,12.5,true
+P002,68,Female,OA,5.2,true
+P003,55,Male,OA,6.8,true
+P004,32,Female,NON_OA,11.0,true
+P005,71,Male,OA,4.5,true
+P006,48,Female,NON_OA,10.2,true
+P007,62,Female,OA,5.8,true
+P008,39,Male,NON_OA,13.1,true
+P009,51,Male,NON_OA,9.8,true
+P010,74,Female,OA,3.9,true
+P011,59,Male,OA,6.2,true
+P012,41,Female,NON_OA,11.4,true

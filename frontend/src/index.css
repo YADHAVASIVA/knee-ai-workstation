@@ -1,0 +1,31 @@
+@import './styles/tokens.css';
+@import './styles/globals.css';
+@import './components/shell/shell.css';
+@import './components/ui/ui.css';
+@import './pages/CaseOverview.css';
+@import './pages/Anatomy.css';
+@import './pages/Analysis.css';
+@import './pages/ImplantPlanning.css';
+@import './pages/Report.css';
+@import './components/MedicalImageViewer.css';
+
+/* 
+ * CRITICAL FIX: The previous layout was breaking because #root had a fixed width
+ * and text-align: center applied. This reset ensures the AppShell correctly
+ * takes over the entire viewport.
+ */
+#root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  border: none;
+  display: block;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}

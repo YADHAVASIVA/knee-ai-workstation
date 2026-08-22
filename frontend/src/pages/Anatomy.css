@@ -1,0 +1,188 @@
+.anatomy-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px); /* Subtract TopBar height */
+  overflow: hidden;
+}
+
+.anatomy-empty {
+  padding: var(--space-6);
+  display: flex;
+  justify-content: center;
+}
+
+.anatomy-header {
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--dark-border);
+  flex-shrink: 0;
+}
+
+.anatomy-title {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--dark-text);
+  letter-spacing: -0.01em;
+}
+
+.anatomy-subtitle {
+  font-size: 14px;
+  color: var(--dark-text-secondary);
+  margin-top: var(--space-1);
+}
+
+.anatomy-workspace {
+  display: flex;
+  flex: 1;
+  gap: var(--space-5);
+  overflow: hidden;
+  padding-bottom: var(--space-5);
+}
+
+.anatomy-hero {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5); /* Stronger shadow in dark mode */
+}
+
+.anatomy-panel {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow-y: auto;
+  padding-right: var(--space-2);
+}
+
+.ana-card {
+  padding: 24px;
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+.ana-card-title {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--dark-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--dark-border);
+  padding-bottom: var(--space-2);
+}
+
+.ana-layers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ana-layer-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.ana-layer-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.ana-color-box {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ana-layer-name {
+  font-size: 13px;
+  color: var(--dark-text);
+}
+
+.ana-measure-group {
+  margin-bottom: var(--space-4);
+}
+
+.ana-measure-group:last-child {
+  margin-bottom: 0;
+}
+
+.ana-measure-title {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--dark-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-3);
+}
+
+.ana-measure-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-2);
+  border-bottom: 1px dashed var(--dark-border-strong);
+}
+
+.ana-measure-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.ana-measure-label {
+  font-size: 13px;
+  color: var(--dark-text-secondary);
+}
+
+.ana-measure-value {
+  font-size: 14px;
+  font-family: var(--font-mono);
+  font-weight: var(--font-weight-medium);
+  color: var(--dark-text);
+}
+
+.ana-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ana-status-label {
+  font-size: 13px;
+  color: var(--dark-text-secondary);
+}
+
+.mt-3 {
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 1024px) {
+  .anatomy-workspace {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .anatomy-hero {
+    min-height: 400px;
+    flex: none;
+  }
+  
+  .anatomy-panel {
+    width: 100%;
+    padding-right: 0;
+    overflow-y: visible;
+  }
+}
+

@@ -1,0 +1,1 @@
+{"image_id":"66b7f9e2-7ca9-4d72-9102-f0aa04973cec","model_status":"demo","model_name":"Demonstration Segmentation Model","model_version":"1.0-demo","clinical_validation":false,"structures":{"femur":{"detected":true,"confidence":null},"tibia":{"detected":true,"confidence":null},"medial_meniscus":{"detected":true,"confidence":null}}}

@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ==========================================================================
+     MEDICAL WORKSTATION TOKENS - PREMIUM ENTERPRISE
+     ========================================================================== */
+
+  /* BRAND COLORS */
+  --color-primary: #167C80;
+  --color-primary-hover: #136C70;
+  --color-primary-active: #0F5C5F;
+  --color-primary-light: rgba(22, 124, 128, 0.08);
+  
+  --color-secondary: #2D6CDF;
+  --color-secondary-hover: #265BBE;
+
+  /* SEMANTIC COLORS */
+  --color-success: #10B981; /* Emerald 500 */
+  --color-warning: #F59E0B; /* Amber 500 */
+  --color-danger: #EF4444;  /* Red 500 */
+  --color-demo: #8B5CF6;    /* Violet 500 */
+
+  /* SHELL & NAVIGATION (DARK) */
+  --shell-bg: #0B0F14;
+  --sidebar-bg: #111820;
+  --topbar-bg: #151D27;
+  --shell-border: #232D38;
+  --shell-text: #F8FAFC;
+  --shell-text-muted: #94A3B8;
+  --sidebar-active-bg: rgba(22, 124, 128, 0.1);
+  --sidebar-active-border: #167C80;
+
+  /* WORLD A: CLINICAL WORKSPACE (LIGHT) */
+  --light-bg: #F8FAFC;          /* Slate 50 */
+  --light-surface: #FFFFFF;     /* White */
+  --light-border: #E2E8F0;      /* Slate 200 */
+  --light-border-strong: #CBD5E1; /* Slate 300 */
+  --light-text: #0F172A;        /* Slate 900 */
+  --light-text-secondary: #475569; /* Slate 600 */
+  --light-text-muted: #94A3B8;  /* Slate 400 */
+
+  /* WORLD B: IMAGING WORKSTATION (DARK) */
+  --dark-bg: #090D12;
+  --dark-surface: #111820;
+  --dark-toolbar: #151C24;
+  --dark-viewer: #030508;
+  --dark-border: #232D38;
+  --dark-border-strong: #334155;
+  --dark-text: #F8FAFC;
+  --dark-text-secondary: #94A3B8;
+
+  /* SPACING RHYTHM (8px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* RADIUS */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
+  
+  /* TYPOGRAPHY */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 20px;
+  --font-size-hero: 28px;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* SHADOWS */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  
+  /* TRANSITIONS */
+  --transition-fast: 150ms ease;
+}
