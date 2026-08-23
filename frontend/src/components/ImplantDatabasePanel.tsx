@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { getFemoralImplants, getTibialImplants } from '../services/api';
 import type { ImplantComponent } from '../services/api';
 import './ImplantDatabasePanel.css';
@@ -20,7 +20,7 @@ export const ImplantDatabasePanel: React.FC = () => {
         // Sort by size
         setFemoral(femData.sort((a, b) => parseInt(a.size) - parseInt(b.size)));
         setTibial(tibData.sort((a, b) => parseInt(a.size) - parseInt(b.size)));
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Failed to fetch implants", err);
         setError("Failed to load implant database.");
       } finally {
@@ -107,3 +107,4 @@ export const ImplantDatabasePanel: React.FC = () => {
     </div>
   );
 };
+

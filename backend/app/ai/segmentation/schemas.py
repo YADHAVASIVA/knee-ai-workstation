@@ -1,6 +1,5 @@
-from pydantic import BaseModel
+﻿from pydantic import BaseModel
 from typing import Dict, Optional
-from app.ai.common.constants import ModelStatus
 
 class StructureResult(BaseModel):
     detected: bool
@@ -11,5 +10,6 @@ class SegmentationResult(BaseModel):
     model_status: str
     model_name: str
     model_version: str
+    is_demo: bool  # NEW
     clinical_validation: bool
     structures: Dict[str, StructureResult]

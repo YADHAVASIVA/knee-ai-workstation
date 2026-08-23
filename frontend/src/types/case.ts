@@ -1,4 +1,4 @@
-﻿import type { ImageMetadata, SegmentationResult, MeasurementResult, BoneMeasurementResult, MatchingResult } from '../services/api';
+﻿import type { ImageMetadata, SegmentationResult, MeasurementResult, BoneMeasurementResult, MatchingResult, OAAnalysisResult } from '../services/api';
 
 export interface PatientInfo {
   name: string;
@@ -24,11 +24,38 @@ export interface CaseImage {
   };
 }
 
+
+export interface PlanningState {
+  calibration: {
+    source?: 'DICOM_PIXEL_SPACING' | 'CALIBRATION_MARKER' | 'MANUAL_REFERENCE';
+    pixelsPerMm?: number;
+    mmPerPixelX?: number;
+    mmPerPixelY?: number;
+    points?: {x: number, y: number}[];
+    referenceLengthMm?: number;
+    imageId?: string;
+  };
+  landmarks: Record<string, {x: number, y: number, imageId: string, source: 'USER', timestamp: string}>;
+  measurements: Record<string, {value: number, unit: string, source: string, imageId: string, landmarks: string[], calculationMethod: string}>;
+  implantSelection: {
+    femoralId?: string;
+    tibialId?: string;
+  };
+  alignmentStrategy?: string;
+  notes?: string;
+}
+
 export interface CaseState {
   caseId: string;
   patient: PatientInfo;
   images: CaseImage[];
   activeImageId: string | null;
-  oaAnalysis: any | null; // Aggregate or per-image depending on backend
-  implantMatches: MatchingResult | null; 
+  oaAnalysis: Record<string, OAAnalysisResult>;
+  xrayAnalysis: Record<string, import('../services/api').XRayInferenceOutput>;
+  implantMatches: Record<string, MatchingResult>;
+  planning: PlanningState;
 }
+
+
+
+

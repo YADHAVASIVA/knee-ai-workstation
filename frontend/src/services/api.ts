@@ -1,4 +1,4 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -101,6 +101,7 @@ export interface SegmentationResult {
   model_status: string;
   model_name: string;
   model_version: string;
+  is_demo: boolean;
   clinical_validation: boolean;
   structures: Record<string, StructureResult>;
 }
@@ -151,12 +152,13 @@ export interface OAAnalysisResult {
   analysis_status: string;
   data_status: string;
   model_status: string;
+  is_demo: boolean;
   patient: PatientData;
-  meniscus_measurement: any;
-  oa_vs_non_oa: any;
-  male_vs_female: any;
-  age_association: any;
-  classifier_result: any;
+  meniscus_measurement: Record<string, unknown>;
+  oa_vs_non_oa: Record<string, unknown>;
+  male_vs_female: Record<string, unknown>;
+  age_association: Record<string, unknown>;
+  classifier_result: { prediction_label: string; prediction_probability: number; explanation: string; };
   warning: string;
 }
 
@@ -278,5 +280,30 @@ export const matchImplants = async (imageId: string, useSyntheticDemoCalibration
 
 export const getImageMetadata = async (imageId: string): Promise<ImageMetadata> => {
   const response = await apiClient.get<ImageMetadata>(`/images/${imageId}/metadata`);
+  return response.data;
+};
+
+
+export interface KLProbabilities {
+  KL0: number;
+  KL1: number;
+  KL2: number;
+  KL3: number;
+  KL4: number;
+}
+
+export interface XRayInferenceOutput {
+  status: string;
+  image_id: string;
+  predicted_kl_grade: number | null;
+  probabilities: KLProbabilities | null;
+  confidence: number | null;
+  model_version: string | null;
+  inference_device: string | null;
+  message: string;
+}
+
+export const analyzeXRay = async (imageId: string): Promise<XRayInferenceOutput> => {
+  const response = await apiClient.post<XRayInferenceOutput>(`/xray/analyze/${imageId}`);
   return response.data;
 };

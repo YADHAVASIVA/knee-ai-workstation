@@ -1,114 +1,182 @@
-.report-workspace {
-  padding: var(--space-64) var(--space-48);
-  max-width: 900px;
+/* ============================================================
+   REPORT PAGE — Professional print-ready clinical document
+   ============================================================ */
+.rp-container {
+  max-width: 880px;
   margin: 0 auto;
+  padding: 40px 32px;
 }
 
-.report-controls {
+/* Document card */
+.rp-document {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.rp-header {
+  background: #101828;
+  color: #FFFFFF;
+  padding: 28px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.rp-header h1 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+
+.rp-header p {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  opacity: 0.45;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ── Sections ────────────────────────────────────────────── */
+.rp-section {
+  padding: 24px 36px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rp-section:last-of-type { border-bottom: none; }
+
+.rp-section h2 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Grid (demographics, etc.) ───────────────────────────── */
+.rp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.rp-item { display: flex; flex-direction: column; gap: 3px; }
+
+.rp-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.rp-val {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ── Clinical notes ──────────────────────────────────────── */
+.rp-notes {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.rp-notes strong {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+/* ── Studies list ────────────────────────────────────────── */
+.rp-studies-list { display: flex; flex-direction: column; gap: 10px; }
+
+.rp-study-card {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  border: 1px solid var(--color-border);
+}
+
+.rp-study-card h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rp-study-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.rp-study-col { display: flex; flex-direction: column; gap: 4px; }
+
+/* ── Disclaimer ──────────────────────────────────────────── */
+.rp-disclaimer {
+  background: var(--color-warning-soft);
+  padding: 18px 36px;
+  border-top: 1px solid #FEE4A6;
+}
+
+.rp-disclaimer strong {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-warning);
+  display: block;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.rp-disclaimer p {
+  font-size: 12px;
+  color: #78350F;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Actions bar ─────────────────────────────────────────── */
+.rp-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-32);
+  padding: 20px 0 8px;
 }
 
-.report-document {
-  background-color: #FFFFFF;
-  border: 1px solid var(--light-border-strong, #D1D5DB);
-  border-radius: 4px;
-  padding: var(--space-64);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
+.rp-primary-actions { display: flex; gap: 10px; }
 
-.report-header {
-  border-bottom: 2px solid var(--light-text);
-  padding-bottom: var(--space-24);
-  margin-bottom: var(--space-48);
-}
-
-.report-header h1 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--light-text);
-}
-
-.report-section {
-  margin-bottom: var(--space-48);
-}
-
-.report-section h2 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--light-text-secondary);
-  border-bottom: 1px solid var(--light-border);
-  padding-bottom: var(--space-8);
-  margin-bottom: var(--space-24);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.report-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-32);
-  font-size: 14px;
-}
-
-.report-grid-3 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--space-24);
-  font-size: 14px;
-}
-
-.report-grid-3 h3 {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 var(--space-12) 0;
-  color: var(--light-text);
-}
-
-.report-warning {
-  margin-top: var(--space-64);
-  border: 2px dashed #EF4444;
-  background-color: #FEF2F2;
-  border-radius: 8px;
-  padding: var(--space-24);
-  text-align: center;
-  color: #991B1B;
-}
-
-.report-warning strong {
-  font-size: 16px;
-  font-weight: 700;
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: var(--space-8);
-  letter-spacing: 0.05em;
-}
-
+/* ── Print ───────────────────────────────────────────────── */
 @media print {
-  .app-sidebar, .app-topbar, .report-controls {
-    display: none !important;
-  }
-  .app-main-content {
-    background: #FFF;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    padding: 0;
-  }
-  .report-workspace {
-    padding: 0;
-    max-width: none;
-  }
-  .report-document {
-    box-shadow: none;
-    border: none;
-    padding: 0;
-  }
+  .rp-container { padding: 0; max-width: none; }
+  .rp-actions   { display: none; }
+  .rp-document  { box-shadow: none; border: none; border-radius: 0; }
+  .rp-header    { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+@media (max-width: 768px) {
+  .rp-container { padding: 16px; }
+  .rp-header, .rp-section, .rp-disclaimer { padding-left: 20px; padding-right: 20px; }
+  .rp-grid { grid-template-columns: 1fr 1fr; }
+  .rp-study-grid { grid-template-columns: 1fr 1fr; }
 }

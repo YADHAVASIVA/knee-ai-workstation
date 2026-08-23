@@ -5,12 +5,11 @@ import './CaseOverview.css';
 
 interface CaseOverviewProps {
   patient: PatientInfo;
-  caseId: string;
   onChange: (patient: PatientInfo) => void;
   onNext: () => void;
 }
 
-export const CaseOverview: React.FC<CaseOverviewProps> = ({ patient, caseId, onChange, onNext }) => {
+export const CaseOverview: React.FC<CaseOverviewProps> = ({ patient, onChange, onNext }) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -22,11 +21,12 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ patient, caseId, onC
   };
 
   const isNameValid = patient.name.trim() !== '';
-  const isPatientIdValid = patient.patientId.trim() !== '';
   const isAgeValid = patient.age.trim() !== '';
+  const isSexValid = patient.sex.trim() !== '';
+  const isDescriptionValid = true;
   const isLateralityValid = patient.laterality.trim() !== '';
 
-  const isValid = isNameValid && isPatientIdValid && isAgeValid && isLateralityValid;
+  const isValid = isNameValid && isAgeValid && isSexValid && isDescriptionValid && isLateralityValid;
 
   return (
     <div className="co-container fade-in">
@@ -53,19 +53,6 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ patient, caseId, onC
           </div>
 
           <div className="co-form-group">
-            <label>Patient / Case ID *</label>
-            <input 
-              type="text" name="patientId" 
-              value={patient.patientId} 
-              onChange={handleChange}
-              onBlur={handleBlur}
-              placeholder={caseId} 
-              className={touched.patientId && !isPatientIdValid ? 'error' : ''}
-            />
-            {touched.patientId && !isPatientIdValid && <span className="co-error-text">Patient / Case ID is required.</span>}
-          </div>
-
-          <div className="co-form-group">
             <label>Age *</label>
             <input 
               type="number" name="age" 
@@ -79,14 +66,15 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ patient, caseId, onC
           </div>
 
           <div className="co-form-group">
-            <label>Sex</label>
-            <select name="sex" value={patient.sex} onChange={handleChange}>
+            <label>Sex *</label>
+            <select name="sex" value={patient.sex} onChange={handleChange} onBlur={handleBlur} className={touched.sex && !isSexValid ? "error" : ""}>
               <option value="">Select</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
-              <option value="Not specified">Not specified</option>
+              <option value="Unknown">Unknown</option>
             </select>
+            {touched.sex && !isSexValid && <span className="co-error-text">Sex is required.</span>}
           </div>
 
           <div className="co-form-group">
@@ -102,20 +90,24 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ patient, caseId, onC
               <option value="Left">Left</option>
               <option value="Right">Right</option>
               <option value="Bilateral">Bilateral</option>
-              <option value="Not specified">Not specified</option>
+              <option value="Unknown">Unknown</option>
             </select>
             {touched.laterality && !isLateralityValid && <span className="co-error-text">Laterality is required.</span>}
           </div>
 
           <div className="co-form-group">
-            <label>Clinical Notes</label>
+            <label>Study / Case Description</label>
             <textarea 
               name="notes" 
               value={patient.notes} 
               onChange={handleChange} 
-              placeholder="Optional clinical notes" 
-              rows={1} 
+              onBlur={handleBlur}
+              placeholder="Enter study description" 
+              rows={2}
+              style={{ resize: 'none' }}
+              className={touched.notes && !isDescriptionValid ? "error" : ""}
             />
+            
           </div>
 
         </div>
@@ -136,3 +128,4 @@ export const CaseOverview: React.FC<CaseOverviewProps> = ({ patient, caseId, onC
     </div>
   );
 };
+

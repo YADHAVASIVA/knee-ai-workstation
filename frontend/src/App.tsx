@@ -1,5 +1,6 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Sidebar } from './components/shell/Sidebar';
+import { FileText, Image as ImageIcon, Layers, Activity, Crosshair, FileOutput } from 'lucide-react';
 import { TopBar } from './components/shell/TopBar';
 import { CaseOverview } from './pages/CaseOverview';
 import { ImagingStudies } from './pages/ImagingStudies';
@@ -16,26 +17,30 @@ export type AppRoute = 'overview' | 'imaging' | 'anatomy' | 'analysis' | 'planni
 
 const StepIndicator = ({ activeRoute }: { activeRoute: string }) => {
   const steps = [
-    { id: 'overview', label: '01 Overview' },
-    { id: 'imaging', label: '02 Imaging' },
-    { id: 'anatomy', label: '03 Anatomy' },
-    { id: 'analysis', label: '04 Analysis' },
-    { id: 'planning', label: '05 Planning' },
-    { id: 'report', label: '06 Report' }
+    { id: 'overview', label: 'Overview', num: 1 },
+    { id: 'imaging',  label: 'Imaging',  num: 2 },
+    { id: 'anatomy',  label: 'Anatomy',  num: 3 },
+    { id: 'analysis', label: 'Analysis', num: 4 },
+    { id: 'planning', label: 'Planning', num: 5 },
+    { id: 'report',   label: 'Report',   num: 6 },
   ];
-  
   const activeIdx = steps.findIndex(s => s.id === activeRoute);
-  
   return (
     <div className="step-indicator">
-      {steps.map((s, idx) => (
-        <React.Fragment key={s.id}>
-          <span className={`step-item ${idx === activeIdx ? 'active' : idx < activeIdx ? 'completed' : 'locked'}`}>
-            {s.label}
-          </span>
-          {idx < steps.length - 1 && <span className="step-arrow">&rarr;</span>}
-        </React.Fragment>
-      ))}
+      {steps.map((s, idx) => {
+        const state = idx < activeIdx ? 'completed' : idx === activeIdx ? 'active' : 'locked';
+        return (
+          <React.Fragment key={s.id}>
+            <div className={`step-item ${state}`}>
+              <div className="step-circle">{state === 'completed' ? '✓' : s.num}</div>
+              <span className="step-label">{s.label}</span>
+            </div>
+            {idx < steps.length - 1 && (
+              <div className={`step-connector ${idx < activeIdx ? 'completed' : ''}`} />
+            )}
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 };
@@ -55,8 +60,9 @@ function App() {
     },
     images: [],
     activeImageId: null,
-    oaAnalysis: null,
-    implantMatches: null
+    oaAnalysis: {},
+    xrayAnalysis: {},
+    implantMatches: {}, planning: { calibration: {}, landmarks: {}, measurements: {}, implantSelection: {} }
   });
 
   const handleProcessImage = async (imageId: string) => {
@@ -101,12 +107,12 @@ function App() {
   };
 
   const navItems = [
-    { id: 'overview', label: 'Overview', icon: 'FileText', category: 'main' },
-    { id: 'imaging', label: 'Imaging', icon: 'Image', category: 'main' },
-    { id: 'anatomy', label: 'Anatomy', icon: 'Layers', category: 'main' },
-    { id: 'analysis', label: 'Analysis', icon: 'Activity', category: 'main' },
-    { id: 'planning', label: 'Planning', icon: 'Crosshair', category: 'main' },
-    { id: 'report', label: 'Report', icon: 'FileOutput', category: 'main' }
+    { id: 'overview', label: 'Overview', icon: <FileText size={18} />, category: 'main' },
+    { id: 'imaging', label: 'Imaging', icon: <ImageIcon size={18} />, category: 'main' },
+    { id: 'anatomy', label: 'Anatomy', icon: <Layers size={18} />, category: 'main' },
+    { id: 'analysis', label: 'Analysis', icon: <Activity size={18} />, category: 'main' },
+    { id: 'planning', label: 'Planning', icon: <Crosshair size={18} />, category: 'main' },
+    { id: 'report', label: 'Report', icon: <FileOutput size={18} />, category: 'main' }
   ];
 
   const handleNewCase = () => {
@@ -116,8 +122,9 @@ function App() {
         patient: { name: '', age: '', sex: '', patientId: '', laterality: '', notes: '' },
         images: [],
         activeImageId: null,
-        oaAnalysis: null,
-        implantMatches: null
+        oaAnalysis: {},
+    xrayAnalysis: {},
+        implantMatches: {}, planning: { calibration: {}, landmarks: {}, measurements: {}, implantSelection: {} }
       });
       setActiveRoute('overview');
     }
@@ -127,7 +134,7 @@ function App() {
     switch (activeRoute) {
       case 'overview':
         return (
-          <CaseOverview patient={caseState.patient} caseId={caseState.caseId} onChange={(p) => setCaseState(prev => ({ ...prev, patient: p }))} onNext={() => setActiveRoute('imaging')} />
+          <CaseOverview patient={caseState.patient}  onChange={(p) => setCaseState(prev => ({ ...prev, patient: p }))} onNext={() => setActiveRoute('imaging')} />
         );
       case 'imaging':
         return (
@@ -189,10 +196,10 @@ function App() {
 
   return (
     <div className={`app-shell theme-${activeRoute === 'anatomy' ? 'dark' : 'light'}`}>
-      <Sidebar activeRoute={activeRoute} analysisId={caseState.caseId} onNavigate={(route) => setActiveRoute(route as AppRoute)} routes={navItems as any} />
+      <Sidebar activeRoute={activeRoute} analysisId={caseState.caseId} onNavigate={(route) => setActiveRoute(route as AppRoute)} routes={navItems} />
       <div className="main-content">
         <TopBar activeRoute={activeRoute} analysisId={caseState.caseId} patientName={caseState.patient.name} isDemo={true} isCalibrated={caseState.images.length > 0 ? caseState.images.some(img => img.metadata?.pixel_spacing) : null} />
-        <main className="page-container">
+        <main className="page-container" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           <StepIndicator activeRoute={activeRoute} />
           <ErrorBoundary>
             {renderPage()}
@@ -204,3 +211,8 @@ function App() {
 }
 
 export default App;
+
+
+
+
+

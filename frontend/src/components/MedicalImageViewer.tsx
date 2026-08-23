@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+﻿import React, { useRef, useState, useEffect } from 'react';
 import './MedicalImageViewer.css';
 import type { MeasurementLocation } from '../services/api';
 import { Button } from './ui/Button';
@@ -15,7 +15,7 @@ interface MedicalImageViewerProps {
   imageUrl: string;
   overlays?: Overlay[];
   measurements?: MeasurementLocation[];
-  boneResult?: any;
+  boneResult?: import('../services/api').BoneMeasurementResult;
   onToggleOverlay?: (id: string) => void;
   onToggleAll?: (show: boolean) => void;
   showMeasurements?: boolean;
@@ -123,7 +123,7 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
       <div className="miv-toolbar">
         <div className="miv-toolbar-group">
           <Button variant="secondary" onClick={handleReset} size="sm">Fit</Button>
-          <Button variant="secondary" onClick={handleZoomOut} size="sm">−</Button>
+          <Button variant="secondary" onClick={handleZoomOut} size="sm">-</Button>
           <span className="miv-zoom-level">{Math.round(scale * 100)}%</span>
           <Button variant="secondary" onClick={handleZoomIn} size="sm">+</Button>
           <Button variant="secondary" onClick={handleReset} size="sm">Reset</Button>
@@ -137,7 +137,7 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
               onChange={(e) => setOpacity(parseFloat(e.target.value))} 
             />
           </div>
-          <Button variant="ghost" onClick={toggleFullscreen} size="sm">⛶</Button>
+          <Button variant="ghost" onClick={toggleFullscreen} size="sm">[ ]</Button>
         </div>
       </div>
 
@@ -229,3 +229,5 @@ export const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
     </div>
   );
 };
+
+

@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+﻿from typing import List, Dict, Any
 from app.ai.oa_analysis.schemas import ClassifierResult, ClassifierExplanation
 import random
 
@@ -13,18 +13,17 @@ class OAClassifier:
             base_prob += 0.3
         if meniscus_thickness < 8.0:
             base_prob += 0.4
-            
+
         prob = min(max(base_prob, 0.0), 1.0)
         label = "OA" if prob > 0.5 else "NON_OA"
-        
+
         explanations = [
-            ClassifierExplanation(feature="Age", contribution=0.3 if age > 50 else 0.0),
-            ClassifierExplanation(feature="Meniscus Thickness", contribution=0.4 if meniscus_thickness < 8.0 else 0.0)
+            f"Age contribution: {0.3 if age > 50 else 0.0}",
+            f"Meniscus contribution: {0.4 if meniscus_thickness < 8.0 else 0.0}"
         ]
-        
+
         return ClassifierResult(
-            model_status=self.model_status,
             prediction_probability=prob,
             prediction_label=label,
-            explanation=explanations
+            explanation=", ".join(explanations)
         )

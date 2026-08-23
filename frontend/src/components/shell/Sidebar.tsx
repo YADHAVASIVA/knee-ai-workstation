@@ -1,5 +1,5 @@
-import React from 'react';
-import { Activity, ShieldCheck, AlertCircle } from 'lucide-react';
+﻿import React from 'react';
+import { Activity } from 'lucide-react';
 import './shell.css';
 
 interface SidebarProps {
@@ -7,17 +7,12 @@ interface SidebarProps {
   onNavigate: (route: string) => void;
   analysisId: string | null;
   routes: Array<{ id: string; label: string; category: string; disabled?: boolean; icon?: React.ReactNode }>;
-  imageMetadata?: any;
-  isCalibrated?: boolean | null;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ 
   activeRoute, 
   onNavigate, 
-  analysisId,
-  routes,
-  imageMetadata,
-  isCalibrated
+  routes
 }) => {
   const sections = routes.reduce((acc, route) => {
     if (!acc[route.category]) acc[route.category] = [];
@@ -29,7 +24,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="app-sidebar">
       <div className="sidebar-brand">
         <div className="brand-logo">
-          <Activity size={24} color="var(--color-primary)" />
+          <Activity size={24} style={{ color: 'var(--color-primary)' }} />
           <div className="brand-text">
             <div className="brand-title">KNEE AI</div>
             <div className="brand-subtitle">Clinical Workstation</div>
@@ -58,20 +53,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         ))}
       </nav>
-
-      {analysisId && (
-        <div className="sidebar-case-context">
-          <div className="case-context-title">CURRENT CASE</div>
-          <div className="case-context-id">{analysisId.split('-')[0].toUpperCase()}</div>
-          <div className="case-context-meta">
-            {imageMetadata?.modality || 'MRI'} &bull; {imageMetadata?.dimensions ? `${imageMetadata.dimensions.width} × ${imageMetadata.dimensions.height}` : 'Unavailable'}
-          </div>
-          <div className={`case-context-status ${isCalibrated ? 'success' : 'warning'}`}>
-            {isCalibrated ? <ShieldCheck size={14} /> : <AlertCircle size={14} />}
-            <span>{isCalibrated ? 'Calibrated' : 'Uncalibrated'}</span>
-          </div>
-        </div>
-      )}
     </aside>
   );
 };

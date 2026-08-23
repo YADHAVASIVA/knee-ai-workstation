@@ -1,73 +1,173 @@
-.planning-matches-list {
+/* ============================================================
+   IMPLANT PLANNING PAGE
+   ============================================================ */
+.ip-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 32px 32px 40px;
+}
+
+.ip-header { margin-bottom: 0; }
+.ip-title   { font-size: 24px; font-weight: 700; color: var(--color-text); margin: 0 0 4px; letter-spacing: -0.02em; }
+.ip-subtitle { font-size: 13px; color: var(--color-text-secondary); margin: 0; }
+
+/* Card — used throughout planning */
+.ip-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.ip-card h3 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  margin: 0 0 14px;
+}
+
+/* Warning card variant */
+.ip-warning {
+  border-left: 3px solid var(--color-warning);
+  background: var(--color-warning-soft);
+  box-shadow: none;
+}
+.ip-warning h3 { color: #78350F; }
+.ip-warning p  { font-size: 14px; color: #78350F; margin: 0; line-height: 1.6; }
+
+/* Two-column planning layout */
+.ip-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+.ip-main-col,
+.ip-side-col {
   display: flex;
   flex-direction: column;
-  gap: var(--space-24);
+  gap: 16px;
 }
 
-.planning-match-card {
-  border: 1px solid var(--light-border-strong);
-  border-radius: 8px;
-  padding: var(--space-24);
-  background-color: var(--light-surface);
-  display: flex;
-  gap: var(--space-24);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  transition: all 0.2s;
+/* Empty state */
+.ip-empty-state {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 48px 32px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
 }
 
-.planning-match-card:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+.ip-empty-state p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0 0 16px;
+  line-height: 1.6;
 }
 
-.match-rank {
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--color-primary);
-  width: 40px;
-  padding-top: 4px;
+/* Match cards */
+.ip-matches { display: flex; flex-direction: column; gap: 10px; }
+
+.ip-match-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  transition: box-shadow 0.12s, border-color 0.12s;
 }
 
-.match-details {
-  flex: 1;
+.ip-match-card:hover { box-shadow: var(--shadow-md); border-color: var(--color-border-strong); }
+
+.ip-match-card:first-child {
+  border-color: #93C5FD;
+  box-shadow: 0 0 0 3px rgba(29,78,216,0.08);
 }
 
-.match-name {
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--light-text);
-  margin-bottom: var(--space-16);
-}
-
-.match-comparison {
-  background-color: var(--light-bg);
-  border-radius: 6px;
-  padding: var(--space-16);
-  border: 1px solid var(--light-border);
-}
-
-.match-comp-row {
+.ip-match-header {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
-  padding: var(--space-4) 0;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
-.match-comp-row.border-top {
-  border-top: 1px dashed var(--light-border-strong);
-  margin-top: var(--space-8);
-  padding-top: var(--space-8);
+.ip-match-header h4 {
+  font-size: 14px;
   font-weight: 600;
-  font-size: 14px;
+  color: var(--color-text);
+  margin: 0;
 }
 
-.match-comp-label {
-  color: var(--light-text-secondary);
-}
-
-.match-score {
-  font-size: 14px;
+.ip-score {
+  font-size: 12px;
   font-weight: 700;
-  color: #16A34A;
-  text-align: right;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 1px solid #BFDBFE;
+}
+
+.ip-match-model { font-size: 13px; color: var(--color-text-secondary); margin: 0 0 12px; }
+
+.ip-match-diffs { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.ip-diff-item {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.ip-diff-item span   { color: var(--color-text-secondary); margin-right: 4px; }
+.ip-diff-item strong { color: var(--color-text); }
+
+.ip-anatomy-details { display: flex; flex-direction: column; }
+
+.ip-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.ip-detail-row:last-child { border-bottom: none; }
+.ip-detail-row span   { color: var(--color-text-secondary); }
+.ip-detail-row strong { color: var(--color-text); font-variant-numeric: tabular-nums; }
+
+.ip-demo-notice {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 10px 12px;
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  line-height: 1.5;
+}
+
+/* Actions bar */
+.ip-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 1024px) {
+  .ip-layout { grid-template-columns: 1fr 320px; }
+}
+
+@media (max-width: 768px) {
+  .ip-container { padding: 24px 16px; }
+  .ip-layout { grid-template-columns: 1fr; }
 }

@@ -1,22 +1,24 @@
-﻿.co-container {
+/* ============================================================
+   CASE OVERVIEW — Patient intake form
+   ============================================================ */
+.co-container {
+  max-width: 680px;
+  margin: 40px auto;
+  padding: 0 32px 40px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  max-width: 900px;
-  margin: 0 auto;
+  gap: 20px;
 }
 
-.co-header {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+/* Header */
+.co-header { margin-bottom: 4px; }
 
 .co-title {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
-  margin: 0;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
 }
 
 .co-subtitle {
@@ -25,87 +27,111 @@
   margin: 0;
 }
 
+/* Card */
 .co-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
 }
 
+.co-notice-card {
+  background: #FFFCF0;
+  border-color: #FEC84B;
+  padding: 20px 28px;
+}
+
+/* Section heading */
 .co-section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-top: 0;
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px;
 }
 
+/* Form grid */
 .co-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: 16px 20px;
 }
 
 .co-form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
 }
 
-.co-form-group.full-width {
-  grid-column: 1 / -1;
-}
+.co-form-group.full-width { grid-column: 1 / -1; }
 
 .co-form-group label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .co-form-group input,
 .co-form-group select,
 .co-form-group textarea {
-  padding: 10px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: inherit;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
   color: var(--color-text);
-  background: #fff;
-  transition: all 0.2s ease;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  width: 100%;
+}
+
+.co-form-group textarea {
+  height: auto;
+  padding: 10px 12px;
+  resize: none;
+  min-height: 72px;
 }
 
 .co-form-group input:focus,
 .co-form-group select:focus,
 .co-form-group textarea:focus {
-  outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-soft);
+  box-shadow: 0 0 0 3px rgba(29,78,216,0.12);
 }
 
+.co-form-group input.error,
+.co-form-group select.error {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(180,35,24,0.10);
+}
+
+.co-error-text {
+  font-size: 12px;
+  color: var(--color-danger);
+}
+
+/* Privacy notice */
 .co-privacy-text {
   font-size: 13px;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
+  color: #92400E;
+  line-height: 1.6;
   margin: 0;
 }
 
+/* Actions */
 .co-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 16px;
+  padding-top: 4px;
 }
 
-.co-next-btn {
-  padding: 12px 24px;
-  font-size: 15px;
-}
+.co-next-btn { min-width: 200px; }
 
 @media (max-width: 768px) {
-  .co-form-grid {
-    grid-template-columns: 1fr;
-  }
+  .co-container { padding: 0 16px 32px; }
+  .co-form-grid { grid-template-columns: 1fr; }
 }

@@ -76,6 +76,7 @@ class SegmentationService:
                 model_status=model_info["model_status"],
                 model_name=model_info["model_name"],
                 model_version=model_info["model_version"],
+                is_demo=True,
                 clinical_validation=model_info["clinical_validation"],
                 structures=structures
             )
